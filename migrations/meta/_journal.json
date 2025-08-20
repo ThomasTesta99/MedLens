@@ -8,6 +8,20 @@
       "when": 1755705324821,
       "tag": "0000_magenta_roland_deschain",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1755706547942,
+      "tag": "0001_loving_spectrum",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1755706643149,
+      "tag": "0002_colorful_microchip",
+      "breakpoints": true
     }
   ]
 }
