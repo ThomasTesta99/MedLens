@@ -5,35 +5,36 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
 
 export const auth = betterAuth({
-    database: drizzleAdapter(db, { 
-        provider: 'pg',
-        schema: auth_schema,
-    }),
-    user: {
-        modelName: "users",
-        fields: {
-            id: "id",
-            email: "email",
-            name: "name",
-            image: "image",
-            emailVerified: "email_verified",
-            createdAt: "created_at",
-            updatedAt: "updated_at",
-        },
-        additionalFields: {
-            role: { type: "string", input: false, defaultValue: "PATIENT" },
-        },
+  database: drizzleAdapter(db, {
+    provider: "pg",
+    schema: auth_schema,
+  }),
+
+  user: {
+    modelName: "users",
+    fields: {
+      id: "id",
+      email: "email",
+      name: "name",
+      image: "image",
+      emailVerified: "emailVerified",  
+      createdAt: "createdAt",
+      updatedAt: "updatedAt",
     },
+    additionalFields: {
+      role: { type: "string", input: false, defaultValue: "patient" },
+    },
+  },
 
   session: {
     modelName: "sessions",
     fields: {
       id: "id",
-      userId: "user_id",
-      sessionToken: "session_token",
-      expiresAt: "expires_at",
-      createdAt: "created_at",
-      updatedAt: "updated_at",
+      userId: "userId",               
+      sessionToken: "token",        
+      expiresAt: "expiresAt",
+      createdAt: "createdAt",
+      updatedAt: "updatedAt",
     },
   },
 
@@ -41,16 +42,15 @@ export const auth = betterAuth({
     modelName: "accounts",
     fields: {
       id: "id",
-      userId: "user_id",
-      provider: "provider",
-      providerAccountId: "provider_account_id",
-      type: "type",
-      passwordHash: "password_hash",
-      accessToken: "access_token",
-      refreshToken: "refresh_token",
-      tokenExpiresAt: "token_expires_at",
-      createdAt: "created_at",
-      updatedAt: "updated_at",
+      userId: "userId",
+      provider: "providerId",         
+      providerAccountId: "accountId", 
+      passwordHash: "password",       
+      accessToken: "accessToken",
+      refreshToken: "refreshToken",
+      tokenExpiresAt: "accessTokenExpiresAt", 
+      createdAt: "createdAt",
+      updatedAt: "updatedAt",
     },
   },
 
@@ -59,11 +59,12 @@ export const auth = betterAuth({
     fields: {
       id: "id",
       identifier: "identifier",
-      token: "token",
-      expiresAt: "expires_at",
-      createdAt: "created_at",
+      token: "value",                 
+      expiresAt: "expiresAt",
+      createdAt: "createdAt",
     },
   },
+
   emailAndPassword: { enabled: true },
   plugins: [nextCookies()],
   baseURL: process.env.NEXT_PUBLIC_BASE_URL!,

@@ -1,7 +1,5 @@
-import { integer, pgEnum, pgTable, text, timestamp, uuid, varchar, boolean} from "drizzle-orm/pg-core";
+import { integer, pgTable, text, timestamp, uuid, varchar, boolean} from "drizzle-orm/pg-core";
 
-export const ROLE_ENUM = pgEnum("role", ["PATIENT", "CAREGIVER", "CLINICIAN", "ADMIN"]);
-export const STATUS_ENUM = pgEnum("status", ["UPLOADED", "PROCESSING", "READY", "ERROR"])
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
@@ -17,7 +15,7 @@ export const users = pgTable("users", {
   updatedAt: timestamp("updated_at")
     .$defaultFn(() => /* @__PURE__ */ new Date())
     .notNull(),
-  role: text("role").default("PATIENT"),
+  role: text("role").default("patient"),
 });
 
 export const sessions = pgTable("sessions", {
@@ -66,11 +64,11 @@ export const verifications = pgTable("verifications", {
 
 export const documents = pgTable("documents", {
     id: uuid("id").primaryKey().defaultRandom(),
-    ownerId: uuid("owner_id").notNull(),
+    ownerId: text("owner_id").notNull().references(() => users.id, { onDelete: "cascade" }),
     title: varchar("title", {length: 256}),
     fileUrl: text("file_url").notNull(),
     pageCount: integer("page_count").default(0),
-    status: STATUS_ENUM("status").notNull().default("UPLOADED"),
+    status: text("status").notNull().default("uploaded"),
     error: text("error"),
     createdAt: timestamp("created_at").defaultNow(),
 })
