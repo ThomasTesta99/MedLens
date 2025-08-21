@@ -48,3 +48,7 @@ export const signUpUser = async ({name, email, password} : CreateUserInfo) => {
         }
     }
 }
+
+export const signOutUser = async () => {
+    await auth.api.signOut({headers: await headers()});
+}
