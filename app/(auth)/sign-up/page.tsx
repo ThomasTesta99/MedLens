@@ -3,7 +3,7 @@ import React from 'react'
 
 const page = () => {
   return (
-    <div className='auth-screen'>
+    <div className='auth-wrapper'>
       <AuthForm type='sign-up'/>
     </div>
   )

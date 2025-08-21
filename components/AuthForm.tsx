@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { signInUser, signUpUser } from '@/lib/user-actions/authActions';
+import Link from 'next/link';
 
 const signInSchema = z.object({
     email: z.email("Invalid email.").min(1, "Email is required."),
@@ -53,9 +54,15 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
     }
 
     return (
-        <div className='auth-container'>
-            <h1 className='auth-header'>MedLens</h1>
-            <h2 className='auth-title'>{type === 'sign-in' ? "Sign In" : "Sign Up"}</h2>
+        <div className='auth-card'>
+
+
+            <div className='mb-6 text-center'>
+                <h1 className='auth-header'>MedLens</h1>
+                <h2 className='auth-subtitle'>{type === 'sign-in' ? "Sign In" : "Sign Up"}</h2>
+            </div>
+
+
             <form onSubmit={form.handleSubmit(onSubmit)} className='auth-form'>
                 {type === 'sign-up' && (
                     <>
@@ -91,11 +98,19 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
                     <p className='auth-error'>{form.formState.errors.password?.message}</p>
                 )}
 
-                <button type='submit' disabled={isLoading}>
+                <button type='submit' disabled={isLoading} className='auth-submit'>
                     {isLoading ? "Loading..." : type === 'sign-in' ? "Sign In" : "Sign Up"}
                 </button>
 
             </form>
+
+            <div className="auth-footer">
+                {type === 'sign-in' ? `Don't have an account? ` : `Already have an account? `}
+                <Link href={type === 'sign-in' ? '/sign-up' : '/sign-in'} className="auth-link">
+                    {type === 'sign-in' ? 'Sign Up' : 'Sign In'}
+                </Link>
+            </div>
+
         </div>
     )
 }

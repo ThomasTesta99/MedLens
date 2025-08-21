@@ -11,6 +11,7 @@
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
+  
 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -25,36 +26,68 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 } */
 
-@layer components{
+:root { font-variant-numeric: tabular-nums; }
 
-  /* AUTH */
+@theme {
+  /* Pick real font names here (or see the next block if you use next/font variables) */
+  --font-sans: Inter, system-ui, "Segoe UI", Roboto, Arial, sans-serif;
+  --font-serif: "Source Serif 4", Georgia, serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+@layer components {
 
-  .auth-screen {
-    @apply flex min-h-screen justify-center items-center p-5 bg-black text-white;
+  .auth-wrapper {
+    @apply min-h-screen w-full bg-gradient-to-br from-slate-900 via-slate-800 to-black flex items-center justify-center px-4;
   }
 
-  .auth-container { 
-    @apply w-full max-w-md rounded-2xl p-8 shadow-lg bg-gray-500 
+  .auth-card {
+    @apply w-full max-w-md rounded-2xl border border-white/10 bg-white/5 p-6 sm:p-8 shadow-2xl backdrop-blur;
   }
 
   .auth-header {
-    @apply w-full text-center text-5xl font-bold;
+    @apply text-5xl font-semibold tracking-tight text-white text-center;
   }
 
-  .auth-title{
-    @apply w-full text-center text-3xl mt-4;
+  .auth-subtitle {
+    @apply mt-1 text-2xl text-slate-300 text-center;
   }
 
-  .auth-form{
-    @apply flex flex-col gap-4 mt-6
+  .auth-form {
+    @apply mt-6 space-y-4;
   }
 
-  .auth-input{
-    @apply border border-black rounded-3xl px-4 py-3 focus:outline-white
+  .auth-field {
+    @apply space-y-1.5;
   }
 
-  .auth-error{
-    @apply text-red-500
+  .auth-label {
+    @apply text-sm font-medium text-slate-200;
   }
 
+  .auth-input {
+    @apply block w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3 text-white placeholder-white/50 outline-none transition
+           focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400;
+  }
+
+  .auth-error {
+    @apply text-sm text-rose-400;
+  }
+
+  .auth-submit {
+    @apply w-full rounded-xl bg-indigo-500 py-3 font-medium text-white transition
+           hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-indigo-400 cursor-pointer
+           disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-spinner {
+    @apply inline-block h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white align-middle;
+  }
+
+  .auth-footer {
+    @apply mt-6 text-center text-sm text-slate-300;
+  }
+
+  .auth-link {
+    @apply font-medium text-indigo-300 hover:text-indigo-200;
+  }
 }
