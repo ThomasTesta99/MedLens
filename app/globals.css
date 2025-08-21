@@ -24,3 +24,37 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 } */
+
+@layer components{
+
+  /* AUTH */
+
+  .auth-screen {
+    @apply flex min-h-screen justify-center items-center p-5 bg-black text-white;
+  }
+
+  .auth-container { 
+    @apply w-full max-w-md rounded-2xl p-8 shadow-lg bg-gray-500 
+  }
+
+  .auth-header {
+    @apply w-full text-center text-5xl font-bold;
+  }
+
+  .auth-title{
+    @apply w-full text-center text-3xl mt-4;
+  }
+
+  .auth-form{
+    @apply flex flex-col gap-4 mt-6
+  }
+
+  .auth-input{
+    @apply border border-black rounded-3xl px-4 py-3 focus:outline-white
+  }
+
+  .auth-error{
+    @apply text-red-500
+  }
+
+}

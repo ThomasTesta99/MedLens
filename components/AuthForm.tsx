@@ -1,6 +1,4 @@
 'use client'
-import Link from 'next/link';
-import Image from 'next/image';
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -55,17 +53,20 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
     }
 
     return (
-        <div>
-            <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className='auth-container'>
+            <h1 className='auth-header'>MedLens</h1>
+            <h2 className='auth-title'>{type === 'sign-in' ? "Sign In" : "Sign Up"}</h2>
+            <form onSubmit={form.handleSubmit(onSubmit)} className='auth-form'>
                 {type === 'sign-up' && (
                     <>
                         <input 
                             type="text" 
                             placeholder='Name'
                             {...form.register('name')}
+                            className='auth-input'
                         />
                         {'name' in form.formState.errors && (
-                            <p>{form.formState.errors.name?.message}</p>
+                            <p className='auth-error'>{form.formState.errors.name?.message}</p>
                         )}
                     </>
                 )}
@@ -74,18 +75,20 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
                     type="email" 
                     placeholder='Email'
                     {...form.register('email')}
+                    className='auth-input'
                 />
                 {form.formState.errors.email && (
-                    <p>{form.formState.errors.email?.message}</p>
+                    <p className='auth-error'>{form.formState.errors.email?.message}</p>
                 )}
 
                 <input 
                     type="password" 
                     placeholder='Password'
                     {...form.register('password')}
+                    className='auth-input'
                 />
                 {form.formState.errors.password && (
-                    <p>{form.formState.errors.password?.message}</p>
+                    <p className='auth-error'>{form.formState.errors.password?.message}</p>
                 )}
 
                 <button type='submit' disabled={isLoading}>
