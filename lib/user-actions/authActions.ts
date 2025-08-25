@@ -52,3 +52,8 @@ export const signUpUser = async ({name, email, password} : CreateUserInfo) => {
 export const signOutUser = async () => {
     await auth.api.signOut({headers: await headers()});
 }
+
+export const getUserSession = async () => {
+    const session = await auth.api.getSession({headers: await headers()});
+    return session
+}
