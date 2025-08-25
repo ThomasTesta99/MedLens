@@ -10,5 +10,6 @@ export const menuBarLinks = [
 
   { imgUrl: "/icons/help.svg",      route: "/help",                 label: "Help / Support" },
   { imgUrl: "/icons/terms.svg", route: "/terms",                label: "Terms" },
+  
 
 ]
