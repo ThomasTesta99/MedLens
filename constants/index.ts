@@ -1,4 +1,4 @@
-export const TABLE_LENGTH = 5;
+export const TABLE_LENGTH = 10;
 
 export const menuBarLinks = [
   { imgUrl: "/icons/home.svg",      route: "/",                     label: "Home" },

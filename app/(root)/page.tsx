@@ -5,21 +5,6 @@ import { getUserSession } from '@/lib/user-actions/authActions'
 import Image from 'next/image';
 import React from 'react'
 
-const statusClass = (status: string) : string => {
-  switch(status){
-    case "ready":
-      return "bg-emerald-500/15 text-emerald-300 ring-emerald-400/30";
-    case "processing":
-      return "bg-amber-500/15 text-amber-300 ring-amber-400/30";
-    case "error":
-      return "bg-rose-500/15 text-rose-300 ring-rose-400/30";
-    case "uploaded":
-      return "bg-slate-700/60 text-slate-200 ring-white/10";
-    default:
-      return "";
-  }
-}
-
 const page = async () => {
   const session = await getUserSession();
   const user = session?.user;
@@ -43,9 +28,9 @@ const page = async () => {
           </div>
         </div>
 
-        <section className="mx-auto p-4 flex flex-col">
+        <section className="mx-auto flex flex-col">
           <DocumentTable />
-          <button className='btn-primary mt-6 text-2xl mx-auto'>
+          <button className='btn-primary mt-8 text-2xl mx-auto'>
             Upload New Document
           </button>
         </section>
