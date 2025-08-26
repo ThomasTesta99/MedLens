@@ -25,7 +25,7 @@ export default function DocumentTable() {
     <div className="mx-auto w-full max-w-6xl">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">Your recent documents</h2>
-        <Link href="/documents" className="text-sm text-indigo-300 hover:text-indigo-200">
+        <Link href="/all-documents" className="text-sm text-indigo-300 hover:text-indigo-200">
           View all
         </Link>
       </div>

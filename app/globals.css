@@ -189,10 +189,10 @@ body {
 
   @layer components {
   .upload-card {
-    @apply rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur;
+    @apply rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur max-w-6xl;
   }
   .upload-title {
-    @apply mb-3 text-lg font-medium text-white;
+    @apply mb-3 text-3xl font-medium text-white text-center p-5;
   }
 
   .dropzone {
