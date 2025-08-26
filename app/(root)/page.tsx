@@ -20,7 +20,7 @@ const page = async () => {
             <p className="mx-auto max-w-2xl text-sm sm:text-base text-slate-300 leading-relaxed">
               Upload your medical documents to receive a clear, plain-English summary with citations.{" "}
               <span className="text-slate-400">
-                Informational only — not medical advice.
+                <strong>Informational only — not medical advice.</strong>
               </span>
             </p>
           </div>

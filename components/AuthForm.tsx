@@ -36,6 +36,7 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
 
     const onSubmit = async (data : AuthFormType) => {
         setIsLoading(true);
+        let navigated = false;
         try {
             const userInfo = data as CreateUserInfo | SignInUserInfo;
             const result = type === 'sign-up'
@@ -43,13 +44,18 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
                 : await signInUser(userInfo as SignInUserInfo);
 
             if(result){
+                navigated = true;
                 console.log(result);
+                router.prefetch("/")
                 router.push('/');
+            }else{
+                setIsLoading(false);
             }
         } catch (error) {
             console.error(error);
-        }finally{
             setIsLoading(false);
+        }finally{
+            if(!navigated) setIsLoading(false);
         }
     }
 
