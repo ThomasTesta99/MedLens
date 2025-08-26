@@ -220,8 +220,8 @@ body {
   }
 
   .btn-primary {
-    @apply rounded-xl bg-indigo-500 px-4 py-2 text-sm font-medium text-white
-           hover:bg-indigo-400 disabled:opacity-60 disabled:cursor-not-allowed;
+    @apply rounded-full bg-indigo-500 px-6 py-2 font-medium text-white
+           hover:bg-indigo-400 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer;
   }
   .btn-ghost {
     @apply rounded-xl bg-white/10 px-3 py-1.5 text-sm hover:bg-white/15;
