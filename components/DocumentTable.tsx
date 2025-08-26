@@ -49,10 +49,7 @@ export default function DocumentTable() {
                     role="button"
                     aria-label={`Open ${doc.title}`}
                     className="border-b border-white/5 last:border-0 cursor-pointer transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:bg-white/10"
-                    onClick={() => router.push(`/documents/${doc.id}`)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') router.push(`/documents/${doc.id}`)
-                    }}
+                    onClick={() => router.push(`/document/${doc.id}`)}
                   >
                     <td className="px-3 py-3">
                       <div className="font-medium text-white">{doc.title}</div>
@@ -82,7 +79,7 @@ export default function DocumentTable() {
             return (
               <Link
                 key={doc.id}
-                href={`/documents/${doc.id}`}
+                href={`/document/${doc.id}`}
                 aria-label={`Open ${doc.title}`}
                 className="block rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/70"
               >

@@ -14,7 +14,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${plexSans.variable} ${plexMono.variable} font-sans antialiased`}>{children}</body>
+      <body className={`${plexSans.variable} ${plexMono.variable} font-sans antialiased`}>
+        {children}
+      </body>
     </html>
   );
 }

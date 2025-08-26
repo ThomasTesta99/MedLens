@@ -1,20 +1,14 @@
-
+'use client'
 import DocumentTable from '@/components/DocumentTable';
-import Topbar from '@/components/Topbar'
-import { getUserSession } from '@/lib/user-actions/authActions'
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import React from 'react'
 
-const page = async () => {
-  const session = await getUserSession();
-  const user = session?.user;
-
-
+const Page = () => {
+  const router = useRouter();
   return (
-    <main className='min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white'>
+    <main className=''>
       <div className="flex flex-col">
-        <Topbar user={user}/>
-
 
         <div className="mx-auto max-w-6xl px-4 py-10">
           <div className="text-center space-y-5">
@@ -30,7 +24,7 @@ const page = async () => {
 
         <section className="mx-auto flex flex-col">
           <DocumentTable />
-          <button className='btn-primary mt-8 text-2xl mx-auto'>
+          <button className='btn-primary mt-8 text-2xl mx-auto' onClick={() => {router.push("/upload")}}>
             Upload New Document
           </button>
         </section>
@@ -68,4 +62,4 @@ const page = async () => {
   )
 }
 
-export default page
+export default Page
