@@ -183,5 +183,59 @@ body {
   /* .home-screen{
     @apply min-h-screen bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white
   } */
+
+
+  /* Upload */
+
+  @layer components {
+  .upload-card {
+    @apply rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur;
+  }
+  .upload-title {
+    @apply mb-3 text-lg font-medium text-white;
+  }
+
+  .dropzone {
+    @apply flex min-h-[140px] items-center justify-center rounded-xl
+           border-2 border-dashed border-white/15 bg-white/5
+           text-slate-300 cursor-pointer transition;
+  }
+  .dropzone--active {
+    @apply border-indigo-400/50 bg-indigo-400/5;
+  }
+  .dropzone-help {
+    @apply text-center;
+  }
+  .dropzone-sub {
+    @apply text-xs text-slate-400;
+  }
+
+  .upload-actions {
+    @apply mt-3 flex items-center gap-3;
+  }
+  .upload-input {
+    @apply w-full rounded-xl border border-white/10 bg-white/5 px-4 py-3
+           text-sm placeholder-white/40 outline-none
+           focus:border-indigo-400 focus:ring-2 focus:ring-indigo-400;
+  }
+
+  .btn-primary {
+    @apply rounded-xl bg-indigo-500 px-4 py-2 text-sm font-medium text-white
+           hover:bg-indigo-400 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+  .btn-ghost {
+    @apply rounded-xl bg-white/10 px-3 py-1.5 text-sm hover:bg-white/15;
+  }
+
+  .upload-meta {
+    @apply mt-2 text-xs text-slate-400;
+  }
+
+  .upload-preview {
+    @apply mt-4 rounded-xl border border-white/10 overflow-hidden;
+  }
+}
+
+
 }
 
