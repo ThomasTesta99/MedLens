@@ -1,3 +1,5 @@
+import { PgUUID } from "drizzle-orm/pg-core";
+
 declare interface CreateUserInfo {
   name: string;
   email: string;
@@ -10,7 +12,7 @@ declare interface SignInUserInfo{
 }
 
 declare interface User {
-  id?: string;
+  id: string;
   name: string;
   email: string;
   emailVerified?: boolean;
@@ -23,4 +25,15 @@ declare interface User {
 
 declare interface UserProps{
   user?: User;
+}
+
+declare interface Document {
+  id: PgUUID,
+  ownerId: string, 
+  title: string,
+  fileUrl: string,
+  pageCount: number,
+  status: string,
+  error: string | null,
+  createdAt: Date,
 }

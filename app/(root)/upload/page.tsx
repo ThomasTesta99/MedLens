@@ -1,11 +1,15 @@
 
 import Upload from '@/components/Upload'
+import { getUserSession } from '@/lib/user-actions/authActions'
 import React from 'react'
 
-const page = () => {
+const page = async () => {
+  const session = await getUserSession();
+  const user = session?.user
+  if(!user) return;
   return (
     <div className=''>
-      <Upload />
+      <Upload user = {user}/>
     </div>
   )
 }

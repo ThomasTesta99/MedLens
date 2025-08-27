@@ -2,7 +2,7 @@ export const TABLE_LENGTH = 10;
 
 export const menuBarLinks = [
   { imgUrl: "/icons/home.svg",      route: "/",                     label: "Home" },
-  { imgUrl: "/icons/document.svg",  route: "/documents",            label: "Documents" },
+  { imgUrl: "/icons/document.svg",  route: "/all-documents",            label: "Documents" },
 
   { imgUrl: "/icons/glossary.svg",      route: "/learn/glossary",       label: "Glossary" },
   { imgUrl: "/icons/list.svg",route: "/learn/guides",         label: "Guides" },

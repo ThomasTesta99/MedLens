@@ -1,4 +1,4 @@
-import { integer, pgTable, text, timestamp, uuid, varchar, boolean} from "drizzle-orm/pg-core";
+import { integer, pgTable, text, timestamp, uuid, varchar, boolean, jsonb} from "drizzle-orm/pg-core";
 
 
 export const users = pgTable("users", {
@@ -63,14 +63,56 @@ export const verifications = pgTable("verifications", {
 });
 
 export const documents = pgTable("documents", {
-    id: uuid("id").primaryKey().defaultRandom(),
-    ownerId: text("owner_id").notNull().references(() => users.id, { onDelete: "cascade" }),
-    title: varchar("title", {length: 256}),
-    fileUrl: text("file_url").notNull(),
-    pageCount: integer("page_count").default(0),
-    status: text("status").notNull().default("uploaded"),
-    error: text("error"),
-    createdAt: timestamp("created_at").defaultNow(),
-})
+  id: uuid("id").primaryKey().defaultRandom(),
+  ownerId: text("owner_id").notNull().references(() => users.id, { onDelete: "cascade" }),
+  title: varchar("title", { length: 256 }),
+  sourceType: varchar("source_type", { length: 16 }),     // 'pdf' | 'image'
+  ingestMethod: varchar("ingest_method", { length: 16 }), // 'pdf_text' | 'ocr'
+  pageCount: integer("page_count").default(0),
+  status: text("status").notNull().default("uploaded"),   // uploaded|processing|ready|error
+  error: text("error"),   
+  // dedupe/ops (of extracted text, not raw file)
+  contentHash: varchar("content_hash", { length: 64 }),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+});
+
+export const documentTexts = pgTable("document_texts", {
+  documentId: uuid("document_id").primaryKey().references(() => documents.id, { onDelete: "cascade" }),
+  language: varchar("language", { length: 8 }), // 'en'
+  plainText: text("plain_text").notNull(),
+});
+
+export const documentSpans = pgTable("document_spans", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
+  page: integer("page"),
+  start: integer("start").notNull(), 
+  end: integer("end").notNull(),     
+  snippet: text("snippet"),          
+});
+
+export const documentEntities = pgTable("document_entities", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
+  label: varchar("label", { length: 64 }).notNull(), // 'ANATOMY','CONDITION','MEASUREMENT','DATE',...
+  start: integer("start").notNull(),
+  end: integer("end").notNull(),
+  text: text("text").notNull(),
+  confidence: integer("confidence"), // 0-100
+  codeSystem: varchar("code_system", { length: 32 }), // 'snomed','icd10',...
+  code: varchar("code", { length: 32 }),
+});
+
+export const documentSummaries = pgTable("document_summaries", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
+  model: varchar("model", { length: 128 }),
+  promptVersion: varchar("prompt_version", { length: 32 }),
+  summaryMarkdown: text("summary_markdown").notNull(),
+  suggestedQuestions: jsonb("suggested_questions"), // string[]
+  citations: jsonb("citations"), // [{section:"key_findings", spanIds:["...","..."]}]
+  createdAt: timestamp("created_at").defaultNow(),
+});
 
 export const auth_schema = {users, sessions, accounts, verifications};
