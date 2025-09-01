@@ -1,6 +1,6 @@
 import { db } from "@/database/drizzle";
 import { documents, documentTexts } from "@/database/schema";
-import { extractPdfText } from "@/lib/extract";
+import { extractPdfText, ocrImageExtract } from "@/lib/extract";
 import { getUserSession } from "@/lib/user-actions/authActions";
 import { NextResponse } from "next/server";
 
@@ -40,11 +40,26 @@ export async function POST(req: Request){
         if(isPdf){
             const {text, pages} = await extractPdfText(buf);
             if(!text){
-
+                return NextResponse.json(
+                    {error: "Something unexpected happened with the text"},
+                    {status: 400},
+                );
             }else{
                 plainText = text;
                 pageCount = pages;
                 ingestMethod = "pdf_text";
+            }
+        }else{
+            const {text, pages} = await ocrImageExtract(buf);
+            if(!text){
+                return NextResponse.json(
+                    {error: "Something unexpected happened with the text"},
+                    {status: 400},
+                );
+            }else{
+                plainText = text;
+                pageCount = pages;
+                ingestMethod = "ocr";
             }
         }
 
