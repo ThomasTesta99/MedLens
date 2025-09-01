@@ -1,5 +1,6 @@
 import { db } from "@/database/drizzle";
 import { documents } from "@/database/schema";
+import { extractPdfText } from "@/lib/extract";
 import { getUserSession } from "@/lib/user-actions/authActions";
 import { NextResponse } from "next/server";
 
@@ -32,9 +33,17 @@ export async function POST(req: Request){
 
         // let plainText = "";
         const pageCount = 0;
-        const ingestMethod: "pdf_text" | "orc" = "pdf_text";
+        const ingestMethod: "pdf_text" | "ocr" = "pdf_text";
 
         const buf = Buffer.from(await file.arrayBuffer());
+
+        if(isPdf){
+            const {text, pages} = await extractPdfText(buf);
+            if(text || pages){
+                console.log(text)
+                console.log(pages);
+            }
+        }
 
         const [document] = await db.insert(documents).values({
             ownerId: session.user.id,

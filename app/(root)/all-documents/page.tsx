@@ -15,7 +15,7 @@ const page = async () => {
         )
     }
     const result = await getUserDocuments({userId: user.id});
-    if(!result.success || !result.documents){
+    if(!result.success || !result.documents || result.documents.length === 0){
         return(
             <div>
                 No User Documents found
