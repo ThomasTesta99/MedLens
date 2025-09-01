@@ -1,5 +1,5 @@
 import { db } from "@/database/drizzle";
-import { documents } from "@/database/schema";
+import { documents, documentTexts } from "@/database/schema";
 import { extractPdfText } from "@/lib/extract";
 import { getUserSession } from "@/lib/user-actions/authActions";
 import { NextResponse } from "next/server";
@@ -31,17 +31,20 @@ export async function POST(req: Request){
             );
         }
 
-        // let plainText = "";
-        const pageCount = 0;
-        const ingestMethod: "pdf_text" | "ocr" = "pdf_text";
+        let plainText = "";
+        let pageCount = 0;
+        let ingestMethod: "pdf_text" | "ocr" = "pdf_text";
 
         const buf = Buffer.from(await file.arrayBuffer());
 
         if(isPdf){
             const {text, pages} = await extractPdfText(buf);
-            if(text || pages){
-                console.log(text)
-                console.log(pages);
+            if(!text){
+
+            }else{
+                plainText = text;
+                pageCount = pages;
+                ingestMethod = "pdf_text";
             }
         }
 
@@ -53,6 +56,12 @@ export async function POST(req: Request){
             pageCount,
             status: "processing"
         }).returning({id: documents.id});
+
+        await db.insert(documentTexts).values({
+            documentId: document.id,
+            language: 'en',
+            plainText,
+        })
 
         return NextResponse.json({id: document.id});
 
