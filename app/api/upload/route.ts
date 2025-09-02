@@ -1,7 +1,6 @@
-import { db } from "@/database/drizzle";
-import { documents, documentTexts } from "@/database/schema";
 import { extractPdfText, ocrImageExtract } from "@/lib/extract";
 import { getUserSession } from "@/lib/user-actions/authActions";
+import { uploadDocument, uploadDocumentTexts } from "@/lib/user-actions/documents";
 import { NextResponse } from "next/server";
 
 export const runtime = "nodejs";
@@ -63,22 +62,37 @@ export async function POST(req: Request){
             }
         }
 
-        const [document] = await db.insert(documents).values({
+        const documentData = {
             ownerId: session.user.id,
-            title, 
+            title: title || '', 
             sourceType, 
             ingestMethod,
             pageCount,
             status: "processing"
-        }).returning({id: documents.id});
+        }
+        const documentUploadResult = await uploadDocument({document: documentData});
+        if(!documentUploadResult.success){
+            return NextResponse.json(
+                {error: documentUploadResult.message},
+                {status: 400},
+            )
+        }
 
-        await db.insert(documentTexts).values({
-            documentId: document.id,
-            language: 'en',
-            plainText,
-        })
+        const textData = {
+            documentId: documentUploadResult.id,
+            language: "en",
+            plainText: plainText
+        }
 
-        return NextResponse.json({id: document.id});
+        const documentTextUploadResult = await uploadDocumentTexts({documentText: textData});
+        if(!documentTextUploadResult.success){
+            return NextResponse.json(
+                {error: documentTextUploadResult.message},
+                {status: 400},
+            )
+        }
+
+        return NextResponse.json({id: documentUploadResult.id});
 
     } catch (error) {
         console.error(error);

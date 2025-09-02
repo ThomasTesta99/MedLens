@@ -37,3 +37,18 @@ declare interface Document {
   error: string | null,
   createdAt: Date,
 }
+
+declare interface UploadDocument{
+  ownerId: string, 
+  title: string, 
+  sourceType: string, 
+  ingestMethod: "pdf_text" | "ocr", 
+  pageCount: number;
+  status: string;
+}
+
+declare interface UploadDocumentText{
+  documentId: stirng, 
+  language: string,
+  plainText: string,
+}

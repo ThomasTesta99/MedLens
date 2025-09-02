@@ -8,7 +8,7 @@ const page = async () => {
   const user = session?.user
   if(!user) return;
   return (
-    <div className=''>
+    <div className='p-6 pr-7'>
       <Upload user = {user}/>
     </div>
   )
