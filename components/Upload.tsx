@@ -1,7 +1,5 @@
 'use client'
-import { extractPdfText, ocrImageExtract } from '@/lib/extract';
-import { getUserSession } from '@/lib/user-actions/authActions';
-import { uploadDocument, uploadDocumentTexts } from '@/lib/user-actions/documents';
+
 import { User } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import React, { type FormEvent, useCallback, useState } from 'react'

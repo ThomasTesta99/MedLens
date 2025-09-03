@@ -1,6 +1,7 @@
 'use server'
 import { headers } from "next/headers"
 import { auth } from "../auth"
+import { CreateUserInfo, SignInUserInfo } from "@/types/types"
 
 export const signInUser = async ({email, password} : SignInUserInfo) => {
     try {

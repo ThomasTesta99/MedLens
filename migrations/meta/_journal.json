@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1755800649790,
-      "tag": "0000_fast_silver_sable",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1756309502969,
-      "tag": "0001_sparkling_morlun",
+      "when": 1756917341662,
+      "tag": "0000_minor_the_renegades",
       "breakpoints": true
     }
   ]

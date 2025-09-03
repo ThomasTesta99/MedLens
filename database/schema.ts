@@ -1,4 +1,5 @@
-import { integer, pgTable, text, timestamp, uuid, varchar, boolean, jsonb} from "drizzle-orm/pg-core";
+
+import { integer, pgTable, text, timestamp, uuid, varchar, boolean, jsonb, json} from "drizzle-orm/pg-core";
 
 
 export const users = pgTable("users", {
@@ -71,8 +72,6 @@ export const documents = pgTable("documents", {
   pageCount: integer("page_count").default(0),
   status: text("status").notNull().default("uploaded"),   // uploaded|processing|ready|error
   error: text("error"),   
-  // dedupe/ops (of extracted text, not raw file)
-  contentHash: varchar("content_hash", { length: 64 }),
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
@@ -83,36 +82,43 @@ export const documentTexts = pgTable("document_texts", {
   plainText: text("plain_text").notNull(),
 });
 
-export const documentSpans = pgTable("document_spans", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
-  page: integer("page"),
-  start: integer("start").notNull(), 
-  end: integer("end").notNull(),     
-  snippet: text("snippet"),          
-});
-
 export const documentEntities = pgTable("document_entities", {
   id: uuid("id").primaryKey().defaultRandom(),
-  documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
-  label: varchar("label", { length: 64 }).notNull(), // 'ANATOMY','CONDITION','MEASUREMENT','DATE',...
+  documentId: uuid("document_id").notNull(),
+  label: text("label").notNull(),          
+  text: text("text").notNull(),
   start: integer("start").notNull(),
   end: integer("end").notNull(),
-  text: text("text").notNull(),
-  confidence: integer("confidence"), // 0-100
-  codeSystem: varchar("code_system", { length: 32 }), // 'snomed','icd10',...
-  code: varchar("code", { length: 32 }),
+  score: text("score"),                   
+  createdAt: timestamp("created_at").defaultNow(),
 });
 
 export const documentSummaries = pgTable("document_summaries", {
   id: uuid("id").primaryKey().defaultRandom(),
-  documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
-  model: varchar("model", { length: 128 }),
-  promptVersion: varchar("prompt_version", { length: 32 }),
-  summaryMarkdown: text("summary_markdown").notNull(),
-  suggestedQuestions: jsonb("suggested_questions"), // string[]
-  citations: jsonb("citations"), // [{section:"key_findings", spanIds:["...","..."]}]
+  documentId: uuid("document_id").notNull(),
+  summaryMd: text("summary_md").notNull(), 
+  citations: json("citations").$type<
+    Array<{ sentenceIdx: number; sourceSentenceIdxes: number[] }>
+  >().notNull(),
   createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const documentSentences = pgTable("document_sentences", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  documentId: uuid("document_id").notNull(),
+  idx: integer("idx").notNull(),
+  text: text("text").notNull(),
+});
+
+// JOBS: small queue for next-step processing
+export const jobs = pgTable("jobs", {
+  id: text("id").primaryKey(),
+  type: varchar("type", { length: 32 }).notNull(),     // "embed" | "summarize"
+  payload: text("payload").notNull(),                  // JSON: {documentId} or {chunkId}
+  status: varchar("status", { length: 16 }).default("queued").notNull(), // queued|running|done|error
+  error: text("error"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 
 export const auth_schema = {users, sessions, accounts, verifications};
