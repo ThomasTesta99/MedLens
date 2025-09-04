@@ -1,5 +1,6 @@
 'use client'
 
+import { Job, JobType } from '@/lib/pipeline';
 import { User } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import React, { type FormEvent, useCallback, useState } from 'react'
@@ -12,6 +13,25 @@ function formatSize(bytes: number): string {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+export async function runAllJobs(
+  opts: {maxRuns?: number, onTick?: (jobtype?: JobType) => void} = {}
+): Promise<void> {
+  console.log("inside run all jobs");
+  const maxRuns = opts.maxRuns ?? 8;
+  for(let i = 0; i < maxRuns; i++){
+    const res = await fetch("/api/jobs/run", {method: "POST"});
+    if(!res.ok) {
+      console.log("ERROR");
+      return;
+    }
+    const data = (await res.json()) as Job;
+
+    if(opts.onTick) opts.onTick(data.jobType);
+    if(!data.processed) break;
+  }
+  console.log("not running your jobs")
 }
 
 const Upload = ({user}: {user: User}) => {
@@ -64,7 +84,14 @@ const Upload = ({user}: {user: User}) => {
       setStatus("Processing complete");
       
       const json = await res.json();
-      router.push(`/document/${json.id}`);
+      const id = json.id;
+      await fetch(`/api/documents/${id}/process`, {method: "POST"});
+      console.log("going to run all the jobs now");
+      await runAllJobs({
+        maxRuns: 50,
+        onTick: (t) => setStatus(t ? `Finished ${t}...` : "Running Jobs...") // needs to be fixed
+      })
+      setStatus("Done");
     } catch (err) {
       console.error(err);
       setError("Unexpected error occurred.");

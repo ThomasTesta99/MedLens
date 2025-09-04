@@ -110,12 +110,11 @@ export const documentSentences = pgTable("document_sentences", {
   text: text("text").notNull(),
 });
 
-// JOBS: small queue for next-step processing
 export const jobs = pgTable("jobs", {
   id: text("id").primaryKey(),
-  type: varchar("type", { length: 32 }).notNull(),     // "embed" | "summarize"
-  payload: text("payload").notNull(),                  // JSON: {documentId} or {chunkId}
-  status: varchar("status", { length: 16 }).default("queued").notNull(), // queued|running|done|error
+  type: varchar("type", { length: 32 }).notNull(),    
+  payload: text("payload").notNull(),                  
+  status: varchar("status", { length: 16 }).default("queued").notNull(), 
   error: text("error"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
