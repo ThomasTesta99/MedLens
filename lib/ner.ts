@@ -23,7 +23,7 @@ export async function extractEntitiesTokenClassification(
   text: string,
   opts?: { model?: string; options?: HFOptions }
 ): Promise<HFTokenEntity[]> {
-  const model = opts?.model ?? "dslim/bert-base-NER";
+  const model = opts?.model ?? "d4data/biomedical-ner-all";
   const url = `https://api-inference.huggingface.co/models/${encodeURI(model)}`;
 
   const body = {

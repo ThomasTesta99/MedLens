@@ -1,7 +1,7 @@
 "use server"
 
 import { db } from "@/database/drizzle";
-import { documents, documentTexts } from "@/database/schema";
+import { documentEntities, documents, documentTexts } from "@/database/schema";
 import { UploadDocument, UploadDocumentText } from "@/types/types";
 import { desc, eq } from "drizzle-orm";
 
@@ -65,4 +65,13 @@ export const uploadDocumentTexts = async ({documentText} : {documentText : Uploa
             message: "Error uploading document texts",
         }
     }
+}
+
+export const getEntities = async (documentId: string) => {
+  try {
+    const entities = await db.select().from(documentEntities).where(eq(documentEntities.documentId, documentId));
+    console.log(entities);
+  } catch (error) {
+    console.log(error);
+  }
 }

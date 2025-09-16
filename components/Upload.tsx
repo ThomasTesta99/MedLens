@@ -1,6 +1,7 @@
 'use client'
 
 import { Job, JobType } from '@/lib/pipeline';
+import { getEntities } from '@/lib/user-actions/documents';
 import { User } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import React, { type FormEvent, useCallback, useState } from 'react'
@@ -91,6 +92,9 @@ const Upload = ({user}: {user: User}) => {
         maxRuns: 50,
         onTick: (t) => setStatus(t ? `Finished ${t}...` : "Running Jobs...") // needs to be fixed
       })
+
+      await getEntities(id);
+
       setStatus("Done");
     } catch (err) {
       console.error(err);
