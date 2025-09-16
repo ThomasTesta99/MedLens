@@ -8,7 +8,7 @@ import {
 import { eq } from "drizzle-orm";
 import { computeSentenceOffsets, getDocumentText, splitIntoSentences } from "./sentence";
 import { extractEntitiesTokenClassification } from "./ner";
-import { CFG, coerceMeasurement, dedupe, Ent, EntitiesPayload, expandEligible, isNegated, isUncertain, Job, JobPayloadBase, JobType, KEEP, keepByLength, Label, nextSegment, normalizeLabel, normalizeMeasurementText, polish, RawEnt, stitchAcrossLabels } from "./entityUtils";
+import * as Entity from "./entityUtils";
 
 export async function enqueueProcessing(documentId: string): Promise<void> {
   await db.insert(jobs).values([
@@ -17,7 +17,7 @@ export async function enqueueProcessing(documentId: string): Promise<void> {
   ]);
 }
 
-export async function runOneJob(): Promise<Job> {
+export async function runOneJob(): Promise<Entity.Job> {
     console.log("Inside Run one job") 
     const job = await db.query.jobs.findFirst({ 
         where: eq(jobs.status, "queued"), 
@@ -25,8 +25,8 @@ export async function runOneJob(): Promise<Job> {
     }); 
     if(!job) return {processed: false,}
     console.log(job)
-    const jobType = job.type as JobType;
-    const payload = JSON.parse(job.payload) as Partial<EntitiesPayload> & Partial<JobPayloadBase>;
+    const jobType = job.type as Entity.JobType;
+    const payload = JSON.parse(job.payload) as Partial<Entity.EntitiesPayload> & Partial<Entity.JobPayloadBase>;
 
     try {
         if (jobType === "sentences") {
@@ -51,38 +51,44 @@ export async function runOneJob(): Promise<Job> {
             const docId = payload.documentId!;
             const base = payload.base ?? 0;
             const full = await getDocumentText(docId);
-            const segment = nextSegment(full, base);
+            const segment = Entity.nextSegment(full, base);
 
             if (segment.text.length > 0) {
-            const raw = await extractEntitiesTokenClassification(segment.text) as RawEnt[];
+            const raw = await extractEntitiesTokenClassification(segment.text) as Entity.RawEnt[];
             let ents = raw
-                .map<Ent | null>((e: RawEnt) => {
+                .map<Entity.Ent | null>((e: Entity.RawEnt) => {
                 const oldLabel = e.entity_group ?? e.entity ?? "";
-                const norm = normalizeLabel(oldLabel);
-                if (!norm || !KEEP.has(norm as Label)) return null;
+
+                const norm = Entity.normalizeLabel(oldLabel);
+                if (!norm || !Entity.KEEP.has(norm as Entity.Label)) return null;
+                
                 const score = e.score ?? 0;
-                if (score < CFG.SCORE_MIN) return null;
+                if (score < Entity.CFG.SCORE_MIN) return null;
+
                 const start = e.start + segment.base;
                 const end = e.end + segment.base;
                 let text = full.slice(start, end);
-                if (!keepByLength(norm, text)) return null;
-                const coerced = coerceMeasurement(norm, text) || norm;
-                const label = coerced as Label;
-                if (label === "MEASUREMENT") text = normalizeMeasurementText(text);
-                const neg = isNegated(full, start);
-                const unc = !neg && isUncertain(full, start, end);
-                const context: Ent["context"] = neg ? "negated" : unc ? "uncertain" : "present";
+
+                if (!Entity.keepByLength(norm, text)) return null;
+
+                const coerced = Entity.coerceMeasurement(norm, text) || norm;
+                const label = coerced as Entity.Label;
+                if (label === "MEASUREMENT") text = Entity.normalizeMeasurementText(text);
+                
+                const neg = Entity.isNegated(full, start);
+                const unc = !neg && Entity.isUncertain(full, start, end);
+                const context: Entity.Ent["context"] = neg ? "negated" : unc ? "uncertain" : "present";
                 return { label, text, start, end, score, context };
                 })
-                .filter((x): x is Ent => x !== null);
+                .filter((x): x is Entity.Ent => x !== null);
 
-            ents = expandEligible(full, ents);
-            ents = stitchAcrossLabels(ents);
-            ents = dedupe(ents);
-            ents = polish(full, ents);
+            ents = Entity.expandEligible(full, ents);
+            ents = Entity.stitchAcrossLabels(ents);
+            ents = Entity.dedupe(ents);
+            ents = Entity.polish(full, ents);
 
             ents.sort((a, b) => b.score - a.score);
-            ents = ents.slice(0, CFG.SEGMENT_CAP);
+            ents = ents.slice(0, Entity.CFG.SEGMENT_CAP);
 
             if (ents.length > 0) {
                 await db.insert(documentEntities).values(

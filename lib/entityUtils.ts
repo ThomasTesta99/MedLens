@@ -100,10 +100,8 @@ export function canJoin(prev: Ent, cur: Ent) {
   if (punctOnly(cur.text)) return true;
   if (tinyLower(prev.text) || tinyLower(cur.text)) return true;
 
-  // NEW: PET + CT (or MR, etc.)
   if (MODALITIES.has(prev.text.toUpperCase()) && MODALITIES.has(cur.text.toUpperCase())) return true;
 
-  // NEW: adjective (pleural/pericardial/…) + finding head (effusion/opacity/…)
   if (ANAT_ADJ.test(prev.text) && FINDING_HEADS.has(cur.text.toLowerCase())) return true;
 
   return false;
@@ -116,10 +114,8 @@ export function joinText(a: string, b: string) {
   if (punctOnly(b)) return (a + b).replace(/\s+/g, "");
   if (tinyLower(a) || tinyLower(b)) return (a + b).replace(/\s+/g, "");
 
-  // NEW: join modalities as PET/CT (no space)
   if (MODALITIES.has(a.toUpperCase()) && MODALITIES.has(b.toUpperCase())) return `${a}/${b}`.replace(/\s+/g, "");
 
-  // NEW: adj + head keeps a single space
   if (ANAT_ADJ.test(a) && FINDING_HEADS.has(b.toLowerCase())) return `${a} ${b}`;
 
   return a + " " + b;
@@ -223,7 +219,6 @@ export function polish(full: string, ents: Ent[]) {
 
   return ents
     .map(e => {
-      // strip trailing punctuation
       const stripped = e.text.replace(/[.,;:]+$/g, "");
       return { ...e, text: stripped };
     })
@@ -233,31 +228,19 @@ export function polish(full: string, ents: Ent[]) {
 
       if (!t) return false;
 
-      // Drop TEST tokens with low clinical utility
       if (e.label === "TEST" && /^(images?|exam|contrast|normal|cardiac)$/i.test(t)) return false;
-
-      // Drop standalone unit as MEASUREMENT
       if (e.label === "MEASUREMENT" && /^(mm|cm)$/i.test(t)) return false;
-
-      // Tiny FINDINGs
       if (e.label === "FINDING" && tl.length <= 3) return false;
-
-      // Anatomy fragments & directionals without head noun
       if (e.label === "ANATOMY") {
         if (denyAnatomy.has(tl) || tl.length <= 2) return false;
         if (/^(left|right|upper|lower|mid|medial|lateral)$/i.test(t)) return false;
       }
-
-      // MR from MRN
       if (e.label === "TEST" && t === "MR") {
         const around = full.slice(Math.max(0, e.start - 2), Math.min(full.length, e.end + 2)).toUpperCase();
         if (around.includes("MRN")) return false;
       }
-
-      // Spurious “Dose” without quantity
       if (e.label === "PROCEDURE" && /^dose$/i.test(t)) return false;
 
-      // Short lowercase noise unless whitelisted or numeric
       if (tl.length <= 3 && !keepShortWhitelist.has(tl)) {
         if (/^\d+(\.\d+)?$/.test(t)) return true;
         return false;
@@ -282,12 +265,10 @@ export function nextSegment(
   const hardEnd = Math.min(n, base + maxChars);
   let end = hardEnd;
 
-  // If we didn’t hit the true end, try to break on a space.
   if (end < n) {
     const lastSpace = full.lastIndexOf(" ", end);
     if (lastSpace > base + 200) end = lastSpace;
   } else {
-    // We *did* hit the end — return the tail slice and jump to n (NO overlap).
     const slice = full.slice(base, n).trim();
     return { text: slice, base, nextBase: n };
   }
@@ -295,21 +276,17 @@ export function nextSegment(
   const rawSlice = full.slice(base, end);
   const slice = rawSlice.trim();
 
-  // Advance past trailing whitespace.
   let nextBaseCandidate = end;
   while (nextBaseCandidate < n && /\s/.test(full[nextBaseCandidate] ?? "")) {
     nextBaseCandidate++;
   }
 
-  // Compute nextBase with overlap, but guarantee forward progress.
   let nextBase = Math.max(base + 1, nextBaseCandidate - overlap);
 
-  // If trim yielded nothing (e.g., whitespace-only chunk), jump to end quickly.
   if (slice.length === 0) {
     nextBase = Math.max(nextBase, end);
   }
 
-  // Clamp.
   if (nextBase > n) nextBase = n;
 
   return { text: slice, base, nextBase };
