@@ -67,10 +67,10 @@ export const documents = pgTable("documents", {
   id: uuid("id").primaryKey().defaultRandom(),
   ownerId: text("owner_id").notNull().references(() => users.id, { onDelete: "cascade" }),
   title: varchar("title", { length: 256 }),
-  sourceType: varchar("source_type", { length: 16 }),     // 'pdf' | 'image'
-  ingestMethod: varchar("ingest_method", { length: 16 }), // 'pdf_text' | 'ocr'
+  sourceType: varchar("source_type", { length: 16 }),     
+  ingestMethod: varchar("ingest_method", { length: 16 }), 
   pageCount: integer("page_count").default(0),
-  status: text("status").notNull().default("uploaded"),   // uploaded|processing|ready|error
+  status: text("status").notNull().default("uploaded"),   
   error: text("error"),   
   createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
@@ -78,7 +78,7 @@ export const documents = pgTable("documents", {
 
 export const documentTexts = pgTable("document_texts", {
   documentId: uuid("document_id").primaryKey().references(() => documents.id, { onDelete: "cascade" }),
-  language: varchar("language", { length: 8 }), // 'en'
+  language: varchar("language", { length: 8 }), 
   plainText: text("plain_text").notNull(),
 });
 
@@ -95,8 +95,9 @@ export const documentEntities = pgTable("document_entities", {
 
 export const documentSummaries = pgTable("document_summaries", {
   id: uuid("id").primaryKey().defaultRandom(),
-  documentId: uuid("document_id").notNull(),
-  summaryMd: text("summary_md").notNull(), 
+  documentId: uuid("document_id").notNull().references(() => documents.id, {onDelete: "cascade"}),
+  summary: text("summary").notNull(), 
+  questions: text("questions").notNull().default("[]"),
   citations: json("citations").$type<
     Array<{ sentenceIdx: number; sourceSentenceIdxes: number[] }>
   >().notNull(),

@@ -52,3 +52,20 @@ declare interface UploadDocumentText{
   language: string,
   plainText: string,
 }
+
+interface GeminiCandidatePart {
+  text?: string;
+  inlineData?: { data: string };
+}
+
+interface GeminiContent {
+  parts: GeminiCandidatePart[];
+}
+
+interface GeminiCandidate {
+  content: GeminiContent;
+}
+
+interface GeminiResponse {
+  candidates?: GeminiCandidate[];
+}

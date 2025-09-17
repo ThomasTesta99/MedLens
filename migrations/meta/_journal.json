@@ -8,6 +8,13 @@
       "when": 1756917341662,
       "tag": "0000_minor_the_renegades",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1758123005545,
+      "tag": "0001_many_cassandra_nova",
+      "breakpoints": true
     }
   ]
 }

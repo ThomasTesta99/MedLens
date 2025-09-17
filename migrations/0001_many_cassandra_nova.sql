@@ -1,0 +1,3 @@
+ALTER TABLE "document_summaries" RENAME COLUMN "summary_md" TO "summary";--> statement-breakpoint
+ALTER TABLE "document_summaries" ADD COLUMN "questions" text DEFAULT '[]' NOT NULL;--> statement-breakpoint
+ALTER TABLE "document_summaries" ADD CONSTRAINT "document_summaries_document_id_documents_id_fk" FOREIGN KEY ("document_id") REFERENCES "public"."documents"("id") ON DELETE cascade ON UPDATE no action;
