@@ -1,9 +1,10 @@
 "use server"
 
 import { db } from "@/database/drizzle";
-import {documents, documentSummaries, documentTexts } from "@/database/schema";
+import {documentEntities, documents, documentSentences, documentSummaries, documentTexts } from "@/database/schema";
 import { UploadDocument, UploadDocumentText } from "@/types/types";
-import { desc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
+import { getUserSession } from "./authActions";
 
 export const getUserDocuments = async ({userId} : {userId : string}) => {
     try {
@@ -69,22 +70,56 @@ export const uploadDocumentTexts = async ({documentText} : {documentText : Uploa
 
 export const getDocumentAndSummary = async ({documentId} : {documentId : string}) => {
     try {
-        const document = await db.select().from(documents).where(eq(documents.id, documentId));
+        const [document] = await db
+            .select().from(documents)
+            .where(eq(documents.id, documentId))
+            .limit(1);
 
-        const summary = await db.select().from(documentSummaries).where(eq(documentSummaries.documentId, documentId));
+        if(!document){
+            return {
+                success: false, 
+                message: `Document with id ${documentId} not found`,
+            }
+        }
+
+        const session = await getUserSession();
+        if(session?.user.id !== document.ownerId){
+            return {
+                success: false,
+                message: "Unautherized"
+            }
+        }
+
+        const [summary] = await db
+            .select()
+            .from(documentSummaries)
+            .where(eq(documentSummaries.documentId, documentId))
+            .limit(1);
+
+        const entities = await db
+            .select()
+            .from(documentEntities)
+            .where(eq(documentEntities.documentId, documentId))
+            .orderBy(documentEntities.label, documentEntities.score);
+
+        const sentences = await db
+            .select()
+            .from(documentSentences)
+            .where(eq(documentSentences.documentId, documentId))
+            .orderBy(asc(documentSentences.idx));
 
         return{
-            success: true,
-            document: document[0], 
-            summary: summary[0],
-            message: "Successfully retrieved documnent and summary",
+            success: true, 
+            message: "Success",
+            document: document, 
+            summary: summary, 
+            entities: entities,
+            sentences: sentences,
         }
     } catch (error) {
-        console.log(error);
-        return{
+        return {
             success: false,
-            error: error,
-            message: "An error occured",
+            message: "An error occured: " + error as string,
         }
     }
 }

@@ -37,14 +37,14 @@ export async function runOneJob(): Promise<Entity.Job> {
             const sentences = splitIntoSentences(text);
             const withOffsets = computeSentenceOffsets(text, sentences);
             if (withOffsets.length > 0) {
-            await db.insert(documentSentences).values(
-                withOffsets.map((s) => ({
-                id: crypto.randomUUID(),
-                documentId,
-                idx: s.idx,
-                text: s.text,
-                })),
-            );
+                await db.insert(documentSentences).values(
+                    withOffsets.map((s) => ({
+                    id: crypto.randomUUID(),
+                    documentId,
+                    idx: s.idx,
+                    text: s.text,
+                    })),
+                );
             }
             await db.update(documents).set({ status: "processing" }).where(eq(documents.id, documentId));
         }

@@ -112,17 +112,14 @@ export async function summarizeAndSuggest({
         throw new Error("Gemini returned empty response");
     }
 
-    // --- Parse & sanitize -----------------------------------------------------
     let out: SummarizeOut;
     try {
         out = JSON.parse(raw) as SummarizeOut;
     } catch {
-        // Fallback: if model ever returns extra text, try to extract JSON blob
         const maybeJson = raw.match(/\{[\s\S]*\}$/)?.[0] ?? raw;
         out = JSON.parse(maybeJson) as SummarizeOut;
     }
 
-    // Minimal sanitation for citations
     out.citations = Array.isArray(out.citations)
         ? out.citations
             .map((c) => ({
