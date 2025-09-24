@@ -1,11 +1,21 @@
-'use client'
 import DocumentTable from '@/components/DocumentTable';
+import { getUserSession } from '@/lib/user-actions/authActions';
+import { getUserDocuments } from '@/lib/user-actions/documents';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import React from 'react'
 
-const Page = () => {
-  const router = useRouter();
+const page = async () => {
+  const session = await getUserSession();
+  const userId = session?.user.id;
+
+  if(!userId) return null;
+  
+  const result = await getUserDocuments({userId});
+  if(!result.success) return null;
+
+  const documents = result.documents;
+
   return (
     <main className=''>
       <div className="flex flex-col">
@@ -23,10 +33,10 @@ const Page = () => {
         </div>
 
         <section className="mx-auto flex flex-col">
-          <DocumentTable />
-          <button className='btn-primary mt-8 text-2xl mx-auto' onClick={() => {router.push("/upload")}}>
+          <DocumentTable documentList={documents}/>
+          <Link href={"/upload"} className='btn-primary mt-8 text-2xl mx-auto' >
             Upload New Document
-          </button>
+          </Link>
         </section>
 
         <section className="mx-auto max-w-6xl px-4 mt-8">
@@ -62,4 +72,4 @@ const Page = () => {
   )
 }
 
-export default Page
+export default page

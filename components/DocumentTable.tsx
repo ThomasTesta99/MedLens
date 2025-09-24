@@ -1,12 +1,26 @@
 'use client'
-import { documents, TABLE_LENGTH } from '@/constants'
+import { formatDate } from '@/app/(root)/all-documents/page'
+import {TABLE_LENGTH } from '@/constants'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import React from 'react'
 
-export default function DocumentTable() {
+type DocumentProps = {
+    id: string;
+    ownerId: string;
+    title: string | null;
+    sourceType: string | null;
+    ingestMethod: string | null;
+    pageCount: number | null;
+    status: string;
+    error: string | null;
+    createdAt: Date | string;
+    updatedAt?: Date | string | null;
+}
+
+export default function DocumentTable({documentList} :  {documentList? : DocumentProps[]}) {
   const router = useRouter()
-  const documentList = documents.slice(0, TABLE_LENGTH)
+  documentList = (documentList ?? []).slice(0, TABLE_LENGTH)
 
   if (!documentList.length) {
     return (
@@ -30,9 +44,9 @@ export default function DocumentTable() {
         </Link>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4 backdrop-blur">
+      <div className="max-w-2xl rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4 backdrop-blur">
         <div className="hidden md:block">
-          <table className="min-w-full text-left text-medium">
+          <table className="w-full table-fixed text-left text-medium">
             <thead className="text-slate-300">
               <tr className="border-b border-white/10">
                 <th className="px-3 py-2 font-medium">Title</th>
@@ -42,6 +56,7 @@ export default function DocumentTable() {
             </thead>
             <tbody>
               {documentList.map((doc) => {
+                doc.status = doc.status.toUpperCase()
                 return (
                   <tr
                     key={doc.id}
@@ -54,7 +69,7 @@ export default function DocumentTable() {
                     <td className="px-3 py-3">
                       <div className="font-medium text-white">{doc.title}</div>
                     </td>
-                    <td className="px-3 py-3 text-slate-300">{doc.uploaded}</td>
+                    <td className="px-3 py-3 text-slate-300">{formatDate(doc.createdAt)}</td>
                     <td className="px-3 py-3">
                       <span 
                         className={[ "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] ring-1", 
@@ -86,7 +101,7 @@ export default function DocumentTable() {
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <div className="font-medium text-white">{doc.title}</div>
-                    <div className="text-xs text-slate-400">{doc.uploaded}</div>
+                    <div className="text-xs text-slate-400">{formatDate(doc.createdAt)}</div>
                   </div>
                   <span 
                     className={[ "inline-flex items-center rounded-full px-2.5 py-0.5 text-[10px] ring-1", 

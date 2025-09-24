@@ -72,7 +72,7 @@ export const documents = pgTable("documents", {
   pageCount: integer("page_count").default(0),
   status: text("status").notNull().default("uploaded"),   
   error: text("error"),   
-  createdAt: timestamp("created_at").defaultNow(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at").defaultNow(),
 });
 

@@ -140,7 +140,7 @@ function StatusBadge({ status }: { status: string }) {
     );
 }
 
-function formatDate(d: Date | string) {
+export function formatDate(d: Date | string) {
     const date = typeof d === "string" ? new Date(d) : d;
 
     return date.toLocaleDateString(undefined, {
