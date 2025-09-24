@@ -19,6 +19,14 @@ export async function enqueueProcessing(documentId: string): Promise<void> {
     ]);
 }
 
+export async function clearJobs() {
+    try {
+        await db.delete(jobs).where(eq(jobs.status, "finished"));
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 export async function runOneJob(): Promise<Entity.Job> {
     console.log("Inside Run one job") 
     const job = await db.query.jobs.findFirst({ 
@@ -188,6 +196,7 @@ export async function runOneJob(): Promise<Entity.Job> {
         }
 
         await db.update(jobs).set({ status: "finished" }).where(eq(jobs.id, job.id));
+        await db.delete(jobs).where(eq(jobs.status, "finished"))
         return { processed: true, jobType: jobType };
     } catch (error) {
     await db.update(jobs).set({ status: "error", error: String(error) }).where(eq(jobs.id, job.id));

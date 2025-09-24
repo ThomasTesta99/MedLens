@@ -224,7 +224,7 @@ body {
            hover:bg-indigo-400 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer;
   }
   .btn-ghost {
-    @apply rounded-xl bg-white/10 px-5 py-1.5 text-red-400 hover:bg-white/15 cursor-pointer;
+    @apply rounded-xl bg-white/10 px-5 py-1.5 hover:bg-white/15 cursor-pointer;
   }
 
   .upload-meta {
