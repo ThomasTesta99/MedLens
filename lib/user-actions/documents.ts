@@ -3,7 +3,7 @@
 import { db } from "@/database/drizzle";
 import {documentEntities, documents, documentSentences, documentSummaries, documentTexts } from "@/database/schema";
 import { UploadDocument, UploadDocumentText } from "@/types/types";
-import { asc, desc, eq } from "drizzle-orm";
+import { and, asc, desc, eq } from "drizzle-orm";
 import { getUserSession } from "./authActions";
 
 export const getUserDocuments = async ({userId} : {userId : string}) => {
@@ -126,27 +126,32 @@ export const getDocumentAndSummary = async ({documentId} : {documentId : string}
 
 export const deleteDocumentData = async ({documentId} : {documentId: string}) => {
     try {
-        const [document] = await db
-            .select().from(documents)
+        const session = await getUserSession();
+        if(!session?.user.id){
+            return {
+                success: "False",
+                message: "Unauthorized"
+            };
+        }
+
+        const [document] = await db.select({ownerId: documents.ownerId})
+            .from(documents)
             .where(eq(documents.id, documentId))
             .limit(1);
 
-        if(!document){
+        if(!document || document.ownerId !== session.user.id){
             return {
                 success: false, 
-                message: `Document with id ${documentId} not found`,
+                message: "Unauthorized"
             }
         }
 
-        const session = await getUserSession();
-        if(session?.user.id !== document.ownerId){
-            return {
-                success: false,
-                message: "Unautherized"
-            }
-        }
+        await db.delete(documents).where(eq(documents.id, documentId));
 
-        await db.delete().
+        return {
+            success: true, 
+            message: "Successfully deleted document data",
+        }
     } catch (error) {
         return {
             success: false,

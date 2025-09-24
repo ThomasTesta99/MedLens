@@ -1,4 +1,5 @@
 import CitationsList from '@/components/CitationsList';
+import DocumentHeader from '@/components/DocumentHeader';
 import { splitIntoSentences } from '@/lib/sentence';
 import { getDocumentAndSummary } from '@/lib/user-actions/documents';
 import React from 'react';
@@ -69,19 +70,7 @@ const page = async ({params}: {params : Promise<{id : string}>}) => {
 
   return (
     <div className="px-6 py-8">
-      <header className="mb-8 flex flex-row justify-between items-center">
-        <div>
-          <h1 className="text-3xl sm:text-4xl font-semibold tracking-light">
-          {document.title ?? "Untitled document"}
-        </h1>
-        <p className="mt-2 text-sm text-slate-300">Document Id: {document.id}</p>
-        </div>
-        <div className=''>
-          <button className='btn-ghost'>
-            Delete Document
-          </button>
-        </div>
-      </header>
+      <DocumentHeader documentId={documentId} documentTitle={document.title}/>
 
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">

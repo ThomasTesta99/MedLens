@@ -84,7 +84,7 @@ export const documentTexts = pgTable("document_texts", {
 
 export const documentEntities = pgTable("document_entities", {
   id: uuid("id").primaryKey().defaultRandom(),
-  documentId: uuid("document_id").notNull(),
+  documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
   label: text("label").notNull(),          
   text: text("text").notNull(),
   start: integer("start").notNull(),
@@ -106,7 +106,7 @@ export const documentSummaries = pgTable("document_summaries", {
 
 export const documentSentences = pgTable("document_sentences", {
   id: uuid("id").primaryKey().defaultRandom(),
-  documentId: uuid("document_id").notNull(),
+  documentId: uuid("document_id").notNull().references(() => documents.id, { onDelete: "cascade" }),
   idx: integer("idx").notNull(),
   text: text("text").notNull(),
 });

@@ -15,6 +15,13 @@
       "when": 1758123005545,
       "tag": "0001_many_cassandra_nova",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1758728860241,
+      "tag": "0002_fixed_mephisto",
+      "breakpoints": true
     }
   ]
 }
