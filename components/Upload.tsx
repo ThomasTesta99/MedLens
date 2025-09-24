@@ -1,7 +1,10 @@
 'use client'
 
+import { db } from '@/database/drizzle';
+import { jobs } from '@/database/schema';
 import { Job, JobType } from '@/lib/entityUtils';
 import { User } from '@/types/types';
+import { eq } from 'drizzle-orm';
 import { useRouter } from 'next/navigation';
 import React, { type FormEvent, useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -13,6 +16,14 @@ function formatSize(bytes: number): string {
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+}
+
+async function clearJobs() {
+    try {
+        await db.delete(jobs).where(eq(jobs.status, "finished"));
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 export async function runAllJobs(
@@ -31,7 +42,7 @@ export async function runAllJobs(
     if(opts.onTick) opts.onTick(data.jobType);
     if(!data.processed) break;
   }
-  console.log("not running your jobs")
+  clearJobs();
 }
 
 const Upload = ({user}: {user: User}) => {
@@ -86,7 +97,7 @@ const Upload = ({user}: {user: User}) => {
       const json = await res.json();
       const id = json.id;
       await fetch(`/api/documents/${id}/process`, {method: "POST"});
-      console.log("going to run all the jobs now");
+
       await runAllJobs({
         maxRuns: 50,
         onTick: (t) => setStatus(t ? `Finished ${t}...` : "Running Jobs...") // needs to be fixed
