@@ -11,7 +11,7 @@ const CitationsList = ({items} : {items : CitationProps[]}) => {
   return (
     <ul className="space-y-4">
       {items.map((c, i) => (
-        <li key={i} className="rounded-xl border border-white/10 bg-white/5 p-4">
+        <li key={i} className="rounded-xl border border-white/10 bg-white/5 p-2">
           <div className="flex items-start gap-3">
             <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-white/10 text-slate-200 border border-white/15">
                Sentence {c.targetIdx}

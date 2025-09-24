@@ -59,7 +59,6 @@ const page = async ({params}: {params : Promise<{id : string}>}) => {
       text: sentences[si].text
     }))
   }))
-
   const grouped = entities.reduce((m, e) => {
     const key = e.label ?? "UNKNOWN";
     const arr = m.get(key) ?? [];
@@ -70,11 +69,18 @@ const page = async ({params}: {params : Promise<{id : string}>}) => {
 
   return (
     <div className="px-6 py-8">
-      <header className="mb-8">
-        <h1 className="text-3xl sm:text-4xl font-semibold tracking-light">
+      <header className="mb-8 flex flex-row justify-between items-center">
+        <div>
+          <h1 className="text-3xl sm:text-4xl font-semibold tracking-light">
           {document.title ?? "Untitled document"}
         </h1>
         <p className="mt-2 text-sm text-slate-300">Document Id: {document.id}</p>
+        </div>
+        <div className=''>
+          <button className='btn-ghost'>
+            Delete Document
+          </button>
+        </div>
       </header>
 
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">

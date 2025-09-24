@@ -124,6 +124,37 @@ export const getDocumentAndSummary = async ({documentId} : {documentId : string}
     }
 }
 
+export const deleteDocumentData = async ({documentId} : {documentId: string}) => {
+    try {
+        const [document] = await db
+            .select().from(documents)
+            .where(eq(documents.id, documentId))
+            .limit(1);
+
+        if(!document){
+            return {
+                success: false, 
+                message: `Document with id ${documentId} not found`,
+            }
+        }
+
+        const session = await getUserSession();
+        if(session?.user.id !== document.ownerId){
+            return {
+                success: false,
+                message: "Unautherized"
+            }
+        }
+
+        await db.delete().
+    } catch (error) {
+        return {
+            success: false,
+            message: "There was an error deleting document data: " + error as string,
+        }
+    }
+}
+
 // export const getEntities = async (documentId: string) => {
 //   try {
 //     const entities = await db.select().from(documentEntities).where(eq(documentEntities.documentId, documentId));

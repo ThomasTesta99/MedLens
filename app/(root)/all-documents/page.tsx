@@ -28,7 +28,7 @@ const page = async () => {
     return (
         <div>
             {documents[0].title}
-            {documents[0].ownerId}
+            {documents[0].id}
         </div>
     )
 }
