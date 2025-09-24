@@ -127,8 +127,6 @@ export async function runOneJob(): Promise<Entity.Job> {
                 });
                 await db.update(documents).set({ status: "processing" }).where(eq(documents.id, docId));
             } else {
-                await db.update(documents).set({ status: "entities_extracted" }).where(eq(documents.id, docId));
-
                 await db.insert(jobs).values({
                     id: crypto.randomUUID(), 
                     type: "summarize",
@@ -194,12 +192,13 @@ export async function runOneJob(): Promise<Entity.Job> {
                 citations: out.citations
             })
         }
-
+        await db.update(documents).set({status: "Ready"}).where(eq(documents.id, payload.documentId!));
         await db.update(jobs).set({ status: "finished" }).where(eq(jobs.id, job.id));
         await db.delete(jobs).where(eq(jobs.status, "finished"))
         return { processed: true, jobType: jobType };
     } catch (error) {
-    await db.update(jobs).set({ status: "error", error: String(error) }).where(eq(jobs.id, job.id));
-    return { processed: false, jobType: jobType, error: String(error) };
+        await db.update(jobs).set({ status: "error", error: String(error) }).where(eq(jobs.id, job.id));
+        await db.update(documents).set({error: String(error)}).where(eq(documents.id, payload.documentId!))
+        return { processed: false, jobType: jobType, error: String(error) };
     }
 }

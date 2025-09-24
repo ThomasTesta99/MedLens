@@ -15,6 +15,8 @@ type Entity = {
   createdAt: Date | null; // <-- allow Date here
 };
 
+ type DocSentence = { idx: number; text: string };
+
 export type Citation = {
   sentenceIdx: number;
   sourceSentenceIdxes: number[];
@@ -50,16 +52,26 @@ const page = async ({params}: {params : Promise<{id : string}>}) => {
     }
   }
 
-  const summarySentences = splitIntoSentences(summary.summary);
+  const cleanSummary = (summary?.summary ?? "").replace(/\s*\[(\d+(,\s*\d+)*)\]/g, "");
+  const summarySentences = splitIntoSentences(cleanSummary);
+
+  const idxToDocText = new Map<number, string>();
+  (sentences as DocSentence[]).forEach(s => idxToDocText.set(s.idx, s.text));
+
+  type Citation = { sentenceIdx: number; sourceSentenceIdxes: number[] };
+
   const oldCitations: Citation[] = (summary?.citations ?? []) as Citation[];
-  const citations = oldCitations.map((c) => ({
-    targetIdx: c.sentenceIdx, 
-    targetText: summarySentences[c.sentenceIdx] ?? "[unavailable]", 
-    sources: (c.sourceSentenceIdxes ?? []).map((si) => ({
-      idx: si, 
-      text: sentences[si].text
-    }))
-  }))
+
+  const citations = oldCitations
+    .filter(c => c.sentenceIdx >= 0 && c.sentenceIdx < summarySentences.length)
+    .map((c) => ({
+      targetIdx: c.sentenceIdx,                                   
+      targetText: summarySentences[c.sentenceIdx] ?? "[unavailable]", 
+      sources: (c.sourceSentenceIdxes ?? []).map((si) => ({      
+        idx: si,
+        text: idxToDocText.get(si) ?? "[source sentence unavailable]",
+      })),
+    }));
   const grouped = entities.reduce((m, e) => {
     const key = e.label ?? "UNKNOWN";
     const arr = m.get(key) ?? [];

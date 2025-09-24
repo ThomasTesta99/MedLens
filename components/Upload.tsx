@@ -1,7 +1,6 @@
 'use client'
 
 import { Job, JobType } from '@/lib/entityUtils';
-import { clearJobs } from '@/lib/pipeline';
 import { User } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import React, { type FormEvent, useCallback, useState } from 'react'
@@ -19,7 +18,6 @@ function formatSize(bytes: number): string {
 export async function runAllJobs(
   opts: {maxRuns?: number, onTick?: (jobtype?: JobType) => void} = {}
 ): Promise<void> {
-  console.log("inside run all jobs");
   const maxRuns = opts.maxRuns ?? 8;
   for(let i = 0; i < maxRuns; i++){
     const res = await fetch("/api/jobs/run", {method: "POST"});
@@ -98,7 +96,7 @@ const Upload = ({user}: {user: User}) => {
 
     } catch (err) {
       console.error(err);
-      setError("Unexpected error occurred.");
+      setError("Unexpected error occurred:" + error as string);
       setStatus(null);
     }finally{
       setIsLoading(false);

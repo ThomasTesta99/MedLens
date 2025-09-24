@@ -1,45 +1,45 @@
 import { GeminiResponse } from "@/types/types";
 
 export type SummarizeOut = {
-  summary: string; 
+  summary: string;
   questions: string[];
   citations: Array<{ sentenceIdx: number; sourceSentenceIdxes: number[] }>;
 };
 
 export async function summarizeAndSuggest({
-    fullText, 
-    entities, 
+    fullText,
+    entities,
     sentences,
     model = "gemini-1.5-flash",
 }:{
-    fullText: string, 
+    fullText: string,
     entities: Array<{ label: string; text: string; context: "present"|"negated"|"uncertain" }>;
     sentences: Array<{ idx: number; text: string }>;
     model?: string;
 }): Promise<SummarizeOut>{
-    const system = 
+    const system =
     `You are a medical-report explainer for paitents.
     Rules:
     - Use only the provides SENTENCES as evidence, do NOT invent facts.
     - Write in plain English at roughly a 6th-grade reading level.
     - Expand abbreviations and avoid jargon; mark negated/uncertain items if present.
-    - Produce a concise summary (6 - 8 sentences, less if necessary).
-    - Generate 5 - 10 specific patient questions.
+    - Produce a concise summary of 6 - 8 sentences. Extend beyond this range only if essential information cannot be captured within 6 - 8 sentences, and avoid repetition.
+    - Generate 5 - 10 specific questions the patient should ask the doctor.
     - Return STRICT JSON matching the provided chema.
-    - Provide citations: for each summary sentence(0-based), list the indices of source SENTENCES that support it.
+    - Provide citations: for ALL summary sentence(0-based), list the indices of source SENTENCES that support it.
     `.trim();
 
     const sentenceBlock = sentences.map(s => `[${s.idx}] ${s.text}`).join("\n");
     const entitiesBlock =- entities.slice(0, 200).map(e => `- ${e.label} | ${e.text} | ${e.context}`).join("\n");
 
     const user = `
-    REPORT TEXT (context only; cite from sentences): 
+    REPORT TEXT (context only; cite from sentences):
     """${fullText.slice(0, 5000)}"""
 
     EXTRACTED ENTITIES:
     ${entitiesBlock}
 
-    SENTENCES (use ONLY these for evidence; city by index):
+    SENTENCES (use ONLY these for evidence; cite by index):
     ${sentenceBlock}
 
     Return ONLY valid JSON:
@@ -51,6 +51,9 @@ export async function summarizeAndSuggest({
             {"sentenceIdx": 1, "sourceSentenceIdxes": [2]}
         ]
     }
+    - Do NOT include [n] or [n, m] anywhere in "summary".
+    - "sentenceIdx" refers to the sentence index after we split "summary" into sentences.
+    - "sourceSentenceIdxes" must match the provided document sentence indices (not positions).
     `.trim();
 
     const response_schema = {
@@ -82,16 +85,16 @@ export async function summarizeAndSuggest({
     const body = {
         contents: [{role: 'user', parts: [{text: `${system}\n\n${user}`}]}],
         generation_config: {
-            temperature: 0.2, 
+            temperature: 0.2,
             response_mime_type: "application/json",
             response_schema
         }
     }
-    
+
     const res = await fetch(
-        url, 
+        url,
         {
-            method: "POST", 
+            method: "POST",
             headers: {"Content-Type": "application/json"},
             body: JSON.stringify(body),
         }
