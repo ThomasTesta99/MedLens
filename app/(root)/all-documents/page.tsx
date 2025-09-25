@@ -107,7 +107,6 @@ function DocumentCard({ doc }: { doc: Doc }) {
         </p>
       ) : null}
 
-      {/* Subtle affordance */}
       <div className="mt-4 flex items-center gap-2 text-indigo-300 text-sm opacity-0 group-hover:opacity-100 transition">
         <span>Open</span>
         <svg className="size-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden>
