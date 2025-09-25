@@ -58,3 +58,23 @@ export const getUserSession = async () => {
     const session = await auth.api.getSession({headers: await headers()});
     return session
 }
+
+export const changePassword = async ({oldPassword, newPassword} : {oldPassword: string, newPassword : string}) => {
+    try {
+        const data = await auth.api.changePassword({
+            body:{
+                newPassword: newPassword, 
+                currentPassword: oldPassword,
+                revokeOtherSessions: true,
+            },
+            headers: await headers(),
+        })
+        return {
+            success: true,
+            message: "Password successfully changed",
+            data: data
+        }
+    } catch (error) {
+        console.log(error);
+    }
+}
