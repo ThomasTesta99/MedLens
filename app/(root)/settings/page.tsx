@@ -1,6 +1,7 @@
 import { getUserSession } from '@/lib/user-actions/authActions'
 import React from 'react'
 import { formatDate } from '../all-documents/page';
+import DangerAction from '@/components/DangerAction';
 
 const page = async () => {
     const session = await getUserSession();
@@ -59,13 +60,13 @@ const page = async () => {
                     <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 ">
                         <p className='mt-2 font-semibold'>Delete All Documents</p>
                         <p className='text-sm text-slate-400'>Removes all uploaded files and generated data.</p>
-                        <button className="mb-2 mt-2 text-red-400 btn-ghost">Delete Documents</button>
+                        <DangerAction user = {user} type = "documents"/>
                     </div>
 
                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 ">
                         <p className='mt-2 font-semibold'>Delete Account</p>
                         <p className='text-sm text-slate-400'>Permanently deletes your account and all associated data.</p>
-                        <button className="mb-2 mt-2 text-red-400 btn-ghost">Delete Account</button>
+                        <DangerAction user = {user} type = "account"/>
 
                     </div>
                 </div>

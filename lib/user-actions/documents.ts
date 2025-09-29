@@ -1,9 +1,9 @@
-"use server"
+'use server'
 
 import { db } from "@/database/drizzle";
 import {documentEntities, documents, documentSentences, documentSummaries, documentTexts } from "@/database/schema";
 import { UploadDocument, UploadDocumentText } from "@/types/types";
-import { and, asc, desc, eq } from "drizzle-orm";
+import { asc, desc, eq } from "drizzle-orm";
 import { getUserSession } from "./authActions";
 
 export const getUserDocuments = async ({userId} : {userId : string}) => {
@@ -22,7 +22,7 @@ export const getUserDocuments = async ({userId} : {userId : string}) => {
     } catch (error) {
         console.log(error);
         return{
-            success: true,
+            success: false,
             message: "Error getting user documents.",
             error: error,
         }
@@ -129,7 +129,7 @@ export const deleteDocumentData = async ({documentId} : {documentId: string}) =>
         const session = await getUserSession();
         if(!session?.user.id){
             return {
-                success: "False",
+                success: false,
                 message: "Unauthorized"
             };
         }

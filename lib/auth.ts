@@ -24,6 +24,9 @@ export const auth = betterAuth({
     additionalFields: {
       role: { type: "string", input: false, defaultValue: "patient" },
     },
+    deleteUser: { 
+            enabled: true
+        } 
   },
 
   session: {
