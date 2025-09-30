@@ -12,12 +12,14 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
     const [confirmDocumentDelete, setConfirmDocumentDelete] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const router = useRouter();
+
     const deleteDocuments = async () => {
         setIsLoading(true);
         try {
             const result = await getUserDocuments({userId: user.id});
             if(!result.success){
                 console.log(result.message + result.error as string);
+                setError(result.message + result.error as string);
                 return;
             }
 
@@ -38,38 +40,42 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
 
                 if(!result.success){
                     console.log(result.message);
+                    setConfirmDocumentDelete(false);
+                    setShowModal(false);
+                    setError(result.message);
                 }else{
                     console.log("Document Deleted")
+                    setError(null);
                 }
             }
             
         } catch (error) {
             console.log(error);
+            setError(null);
         }finally{
             setIsLoading(false);
-            if(error == null){
-                setShowModal(false);
-            }
         }
     }
 
     const deleteAccount = async () => {
         setIsLoading(true);
-        setError(null)
+        setError(null);
         try {
             await deleteDocuments();
             const deleteAccountSuccess = await deleteUserAccount({password});
 
-            if(deleteAccountSuccess.success){
-                router.refresh();
+            if(!deleteAccountSuccess.success){
+                setError(deleteAccountSuccess.message);
+                return;
             }
+            setPassword('');
+            setConfirmDocumentDelete(false);
+            setShowModal(false);
+            router.refresh();
         } catch (error) {
             console.log(error);
         }finally{
             setIsLoading(false);
-            if(error == null){
-                setShowModal(false);
-            }
         }
     }
 
@@ -86,7 +92,7 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
 
             {showModal && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    <div className="fixed inset-0 bg-black/60 p-6"> 
+                    <div className="fixed inset-0 bg-black/60 p-6 rounded-2xl"> 
                         <div className="relative z-10 w-full max-w-md rounded-2xl bg-white shadow-xl p-3">
                             <h2 className="text-lg font-semibold text-gray-900">
                                 Confirm {type === "account" ? "Account" : "All Documents"} Deletion

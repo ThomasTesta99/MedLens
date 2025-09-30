@@ -2,6 +2,7 @@ import { getUserSession } from '@/lib/user-actions/authActions'
 import React from 'react'
 import { formatDate } from '../all-documents/page';
 import DangerAction from '@/components/DangerAction';
+import ChangePassword from '@/components/ChangePassword';
 
 const page = async () => {
     const session = await getUserSession();
@@ -13,7 +14,7 @@ const page = async () => {
     const user = session.user
 
     return (
-        <main className='mx-auto max-w-4xl px-6 py-10 space-y-8'>
+        <main className='mx-auto max-w-4xl px-6 sm:py-10 space-y-8'>
             <header>
                 <h1 className="text-3xl font-semibold">Settings</h1>
                 <p className="mt-2 text-slate-200">Manage your account and data</p>
@@ -21,7 +22,7 @@ const page = async () => {
 
             <section className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6">
                 <h2 className='text-xl font-bold'>Profile</h2>
-                <div className='mt-4 grid gap-4 sm:grid-cols-2'>
+                <div className='sm:mt-4 grid gap-4 sm:grid-cols-2'>
                     <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 ">
                         <p className='mt-2 text-slate-300'>Name</p>
                         <p className='mb-2 font-semibold'>{user.name}</p>
@@ -47,8 +48,13 @@ const page = async () => {
             <section className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6">
                 <h2 className='text-xl font-bold'>Manage Account</h2>
                 <div className='mt-4 grid gap-4 sm:grid-cols-2'>
-                    
-                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 ">
+                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[100]">
+                       <p className='mt-2 font-semibold'>Change Password</p>
+                       <p className='text-sm text-slate-400'>You must provide your old password in order to create a new one.</p>
+                       <ChangePassword />
+                    </div>
+
+                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[99]">
                         <p className='mt-2 font-semibold'>Delete All Documents</p>
                         <p className='text-sm text-slate-400'>Removes all uploaded files and generated data.</p>
                         <DangerAction user = {user} type = "documents"/>
@@ -60,14 +66,6 @@ const page = async () => {
                         <DangerAction user = {user} type = "account"/>
 
                     </div>
-                    
-                    
-                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4">
-                       <p className='mt-2 font-semibold'>Change Password</p>
-                       <p className='text-sm text-slate-400'>You must provide your old password in order to create a new one.</p>
-                       <button className="mb-2 mt-2 btn-ghost">Change Password</button>
-                    </div>
-
                 </div>
             </section>
 

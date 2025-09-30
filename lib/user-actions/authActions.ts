@@ -76,6 +76,10 @@ export const changePassword = async ({oldPassword, newPassword} : {oldPassword: 
         }
     } catch (error) {
         console.log(error);
+        return {
+            success: false, 
+            message: "There was an error changing your password: " + error as string,
+        }
     }
 }
 
