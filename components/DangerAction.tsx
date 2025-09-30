@@ -1,6 +1,8 @@
 'use client'
+import { deleteUserAccount } from '@/lib/user-actions/authActions'
 import { deleteDocumentData, getUserDocuments } from '@/lib/user-actions/documents'
 import { User } from '@/types/types'
+import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 
 const DangerAction = ({user, type} : {user: User, type : "account" | "documents"}) => {
@@ -9,7 +11,7 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
     const [password, setPassword] = useState("");
     const [confirmDocumentDelete, setConfirmDocumentDelete] = useState(false);
     const [error, setError] = useState<string | null>(null);
-
+    const router = useRouter();
     const deleteDocuments = async () => {
         setIsLoading(true);
         try {
@@ -45,7 +47,7 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
             console.log(error);
         }finally{
             setIsLoading(false);
-            if(error != null){
+            if(error == null){
                 setShowModal(false);
             }
         }
@@ -55,13 +57,17 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
         setIsLoading(true);
         setError(null)
         try {
-            deleteDocuments();
-            console.log(password)
+            await deleteDocuments();
+            const deleteAccountSuccess = await deleteUserAccount({password});
+
+            if(deleteAccountSuccess.success){
+                router.refresh();
+            }
         } catch (error) {
             console.log(error);
         }finally{
             setIsLoading(false);
-            if(error != null){
+            if(error == null){
                 setShowModal(false);
             }
         }

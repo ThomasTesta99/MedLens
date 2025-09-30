@@ -47,16 +47,7 @@ const page = async () => {
             <section className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6">
                 <h2 className='text-xl font-bold'>Manage Account</h2>
                 <div className='mt-4 grid gap-4 sm:grid-cols-2'>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 ">
-                       <p className='mt-2 font-semibold'>Change Password</p>
-                       <p className='text-sm text-slate-400'>You must provide your old password in order to create a new one.</p>
-                       <button className="mb-2 mt-2 btn-ghost">Change Password</button>
-                    </div>
-
-                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 ">
-                        
-                    </div>
-
+                    
                     <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 ">
                         <p className='mt-2 font-semibold'>Delete All Documents</p>
                         <p className='text-sm text-slate-400'>Removes all uploaded files and generated data.</p>
@@ -65,10 +56,18 @@ const page = async () => {
 
                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 ">
                         <p className='mt-2 font-semibold'>Delete Account</p>
-                        <p className='text-sm text-slate-400'>Permanently deletes your account and all associated data.</p>
+                        <p className='text-sm text-slate-400'>Permanently deletes your account.</p>
                         <DangerAction user = {user} type = "account"/>
 
                     </div>
+                    
+                    
+                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4">
+                       <p className='mt-2 font-semibold'>Change Password</p>
+                       <p className='text-sm text-slate-400'>You must provide your old password in order to create a new one.</p>
+                       <button className="mb-2 mt-2 btn-ghost">Change Password</button>
+                    </div>
+
                 </div>
             </section>
 

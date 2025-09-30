@@ -10,7 +10,7 @@ export async function summarizeAndSuggest({
     fullText,
     entities,
     sentences,
-    model = "gemini-1.5-flash",
+    model = "gemini-2.5-flash",
 }:{
     fullText: string,
     entities: Array<{ label: string; text: string; context: "present"|"negated"|"uncertain" }>;

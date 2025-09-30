@@ -78,3 +78,38 @@ export const changePassword = async ({oldPassword, newPassword} : {oldPassword: 
         console.log(error);
     }
 }
+
+export const deleteUserAccount = async ({password}: {password: string}) => {
+    try {
+        const session = await getUserSession();
+        if(!session?.user.id){
+            return {
+                success: false, 
+                message: "Unauthorized",
+            }
+        }
+
+        const result = await auth.api.deleteUser({
+            body: {
+                password: password,
+            },
+            headers: await headers(),
+        })
+
+        if(result.success){
+            await auth.api.signOut({headers: await headers()});
+        }
+
+        return {
+            success: result.success,
+            message: result.message,
+        }
+
+    } catch (error) {
+        console.log(error);
+        return{
+            success: false, 
+            message: "There was an error deleting your account: " + error as string,
+        }
+    }
+}

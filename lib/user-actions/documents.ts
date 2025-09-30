@@ -159,12 +159,3 @@ export const deleteDocumentData = async ({documentId} : {documentId: string}) =>
         }
     }
 }
-
-// export const getEntities = async (documentId: string) => {
-//   try {
-//     const entities = await db.select().from(documentEntities).where(eq(documentEntities.documentId, documentId));
-//     console.log(entities);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
