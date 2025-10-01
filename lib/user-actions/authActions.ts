@@ -3,6 +3,9 @@ import { headers } from "next/headers"
 import { auth } from "../auth"
 import { Action, CreateUserInfo, SignInUserInfo } from "@/types/types"
 import { validateWithArcjet } from "../arcjet"
+import { db } from "@/database/drizzle"
+import { users } from "@/database/schema"
+import { eq } from "drizzle-orm"
 
 export const signInUser = async ({email, password} : SignInUserInfo) => {
     try {
@@ -118,4 +121,84 @@ export const deleteUserAccount = async ({password}: {password: string}) => {
 export const checkRate = async (fingerprint: string, scope: Action) => {
     const rateCheck = await validateWithArcjet(fingerprint, scope);
     return rateCheck;
+}
+
+export const resetUserPassword = async ({password, token}: {password: string, token: string}) => {
+    try {
+        const data = await auth.api.resetPassword({
+            body:{
+                newPassword: password, 
+                token: token,
+            }
+        })
+
+        if(!data.status){
+            return {
+                success: false, 
+                message: "Failed to reset password."
+            }
+        }else{
+            return {
+                success: true, 
+                message: "Successfully reset password"
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        return{
+            success: false, 
+            message: "Failed to reset password: " + error as string,
+        }
+    }
+}
+
+export const sendResetPasswordEmail = async ({email, url}: {email: string, url: string}) =>{
+    try {
+        const result = await auth.api.forgetPassword({
+            body:{
+                email: email, 
+                redirectTo: url, 
+            }
+        });
+
+        if(!result.status){
+            return {
+                success: false, 
+                message: "Failed to send."
+            }
+        }else{
+            return {
+                success: true, 
+                message: "Successfully sent reset password link"
+            }
+        }
+    } catch (error) {
+        return {
+                success: false, 
+                message: "Failed to send link: " + error as string,
+            }
+    }
+}
+
+export const getUserByEmail = async ({email} : {email : string}) => {
+    try {
+        const result = await db.select().from(users).where(eq(users.email, email));
+
+        const foundUser = result[0]; 
+
+        if (!foundUser) {
+            return { success: false, message: 'User not found' };
+        }
+
+        return {
+            success: true,
+            user: foundUser,
+        };
+    } catch (error) {
+        console.error('Error in getUserByEmail:', error);
+        return {
+        success: false,
+        message: 'Server error while fetching user',
+        };
+    }
 }

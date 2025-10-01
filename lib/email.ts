@@ -17,8 +17,8 @@ export const sendEmail = async ({
             origin: 'http://localhost',
         }, 
         body: JSON.stringify({
-            serviceID: serviceID, 
-            templateID: templateID, 
+            service_id: serviceID, 
+            template_id: templateID, 
             user_id: publicKey, 
             accessToken: privateKey, 
             template_params: {

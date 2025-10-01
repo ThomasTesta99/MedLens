@@ -1,5 +1,5 @@
 'use client'
-import { checkRate } from '@/lib/user-actions/authActions';
+import { checkRate, getUserByEmail, sendResetPasswordEmail } from '@/lib/user-actions/authActions';
 import React, { useState } from 'react'
 
 const ForgotPassword = () => {
@@ -11,12 +11,25 @@ const ForgotPassword = () => {
         setIsSubmitting(true);
         
         try {
-            const check = await checkRate(email, "password-reset");
-            if(!check.valid){
-                throw new Error(check.message);
-            }else{
-                console.log(check.message);
+            const userResult = await getUserByEmail({email});
+
+            if(!userResult.user){
+                throw new Error("Failed to send link");
             }
+
+            const rateLimit = await checkRate(email, "password-reset");
+            if(!rateLimit.valid){
+                throw new Error(rateLimit.message);
+            }
+
+            const redirectTo = `${window.location.origin}/reset-password`;
+            const result = await sendResetPasswordEmail({email, url: redirectTo});
+            if(!result.success){
+                throw new Error(result.message);
+            }else{
+                console.log("Reset link sent. Please check your email");
+            }
+
         } catch (error) {
             console.log(error);
         }finally{
