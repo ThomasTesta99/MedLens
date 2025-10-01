@@ -1,4 +1,5 @@
 'use client'
+import { checkRate } from '@/lib/user-actions/authActions';
 import React, { useState } from 'react'
 
 const ForgotPassword = () => {
@@ -10,9 +11,16 @@ const ForgotPassword = () => {
         setIsSubmitting(true);
         
         try {
-            
+            const check = await checkRate(email, "password-reset");
+            if(!check.valid){
+                throw new Error(check.message);
+            }else{
+                console.log(check.message);
+            }
         } catch (error) {
-            
+            console.log(error);
+        }finally{
+            setIsSubmitting(false);
         }
     }
 

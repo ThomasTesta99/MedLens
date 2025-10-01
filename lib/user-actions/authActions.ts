@@ -1,7 +1,8 @@
 'use server'
 import { headers } from "next/headers"
 import { auth } from "../auth"
-import { CreateUserInfo, SignInUserInfo } from "@/types/types"
+import { Action, CreateUserInfo, SignInUserInfo } from "@/types/types"
+import { validateWithArcjet } from "../arcjet"
 
 export const signInUser = async ({email, password} : SignInUserInfo) => {
     try {
@@ -112,4 +113,9 @@ export const deleteUserAccount = async ({password}: {password: string}) => {
             message: "There was an error deleting your account: " + error as string,
         }
     }
+}
+
+export const checkRate = async (fingerprint: string, scope: Action) => {
+    const rateCheck = await validateWithArcjet(fingerprint, scope);
+    return rateCheck;
 }

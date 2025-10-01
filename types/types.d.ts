@@ -69,3 +69,5 @@ interface GeminiCandidate {
 interface GeminiResponse {
   candidates?: GeminiCandidate[];
 }
+
+export type Action = 'password-reset';
