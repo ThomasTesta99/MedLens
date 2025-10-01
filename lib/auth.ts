@@ -3,6 +3,7 @@ import { auth_schema } from "@/database/schema";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
+import { sendEmail } from "./email";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -25,8 +26,8 @@ export const auth = betterAuth({
       role: { type: "string", input: false, defaultValue: "patient" },
     },
     deleteUser: { 
-            enabled: true
-        } 
+      enabled: true
+    } 
   },
 
   session: {
@@ -68,7 +69,15 @@ export const auth = betterAuth({
     },
   },
 
-  emailAndPassword: { enabled: true },
+  emailAndPassword: { 
+    enabled: true,
+    sendResetPassword: async ({user, url}, request) => {
+      await sendEmail({
+        to: user.email, 
+        resetLink: url,
+      })
+    } 
+  },
   plugins: [nextCookies()],
   baseURL: process.env.NEXT_PUBLIC_BASE_URL!,
 });
