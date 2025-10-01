@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { signInUser, signUpUser } from '@/lib/user-actions/authActions';
 import Link from 'next/link';
+import { CreateUserInfo, SignInUserInfo } from '@/types/types';
 
 const signInSchema = z.object({
     email: z.email("Invalid email.").min(1, "Email is required."),
@@ -23,7 +24,7 @@ type SignUpType = z.infer<typeof signUpSchema>;
 type AuthFormType = SignInType | SignUpType;
 
 const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
-
+    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(false);
 
@@ -36,6 +37,7 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
 
     const onSubmit = async (data : AuthFormType) => {
         setIsLoading(true);
+        setError(null);
         let navigated = false;
         try {
             const userInfo = data as CreateUserInfo | SignInUserInfo;
@@ -43,17 +45,17 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
                 ? await signUpUser(userInfo as CreateUserInfo)
                 : await signInUser(userInfo as SignInUserInfo);
 
-            if(result){
+            if(result.success){
                 navigated = true;
-                console.log(result);
                 router.prefetch("/")
                 router.push('/');
             }else{
                 setIsLoading(false);
+                setError(result.message);
             }
         } catch (error) {
-            console.error(error);
             setIsLoading(false);
+            setError(error as string);
         }finally{
             if(!navigated) setIsLoading(false);
         }
@@ -102,6 +104,10 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
                 />
                 {form.formState.errors.password && (
                     <p className='auth-error'>{form.formState.errors.password?.message}</p>
+                )}
+
+                {error && (
+                    <p className="text-red-500 mt-4">{error}</p>
                 )}
 
                 <button type='submit' disabled={isLoading} className='auth-submit'>

@@ -4,9 +4,6 @@ export const menuBarLinks = [
   { imgUrl: "/icons/home.svg",      route: "/",                     label: "Home" },
   { imgUrl: "/icons/document.svg",  route: "/all-documents",            label: "Documents" },
 
-  { imgUrl: "/icons/glossary.svg",      route: "/learn/glossary",       label: "Glossary" },
-  { imgUrl: "/icons/list.svg",route: "/learn/guides",         label: "Guides" },
-
   { imgUrl: "/icons/shield.svg",    route: "/security",     label: "Security, Data & Privacy" },
 
   { imgUrl: "/icons/help.svg",      route: "/help",                 label: "Help / Support" },

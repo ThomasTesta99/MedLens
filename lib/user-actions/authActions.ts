@@ -18,7 +18,6 @@ export const signInUser = async ({email, password} : SignInUserInfo) => {
             message: "User successfuly logged in." + user,
         }
     } catch (error) {
-        console.log(error)
         return {
             success: false,
             message: "Failed to log in: " + error,
@@ -42,7 +41,6 @@ export const signUpUser = async ({name, email, password} : CreateUserInfo) => {
             message: "Signed Up sucessfully. " + newUser,
         }
     } catch (error) {
-        console.log(error)
         return {
             success: false,
             message: "Failed to sign up user: " + error,
@@ -75,7 +73,6 @@ export const changePassword = async ({oldPassword, newPassword} : {oldPassword: 
             data: data
         }
     } catch (error) {
-        console.log(error);
         return {
             success: false, 
             message: "There was an error changing your password: " + error as string,
@@ -110,7 +107,6 @@ export const deleteUserAccount = async ({password}: {password: string}) => {
         }
 
     } catch (error) {
-        console.log(error);
         return{
             success: false, 
             message: "There was an error deleting your account: " + error as string,
