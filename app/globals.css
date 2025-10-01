@@ -90,7 +90,7 @@ body {
   }
 
   .auth-link {
-    @apply font-medium text-indigo-300 hover:text-indigo-200;
+    @apply font-medium text-indigo-300 hover:text-indigo-200 hover:underline;
   }
 
   .topbar {

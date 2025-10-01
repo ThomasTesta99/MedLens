@@ -63,8 +63,6 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
 
     return (
         <div className='auth-card'>
-
-
             <div className='mb-6 text-center'>
                 <h1 className='auth-header'>MedLens</h1>
                 <h2 className='auth-subtitle'>{type === 'sign-in' ? "Sign In" : "Sign Up"}</h2>
@@ -122,6 +120,14 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
                     {type === 'sign-in' ? 'Sign Up' : 'Sign In'}
                 </Link>
             </div>
+
+            {type === 'sign-in' && (
+                <div className='w-full flex flex-row justify-center mt-2'>
+                    <Link href="/forgot-password" className='hover:underline text-sm text-slate-300 hover:text-white text-center'>
+                        Forgot Password
+                    </Link>
+                </div>
+            )}
 
         </div>
     )
