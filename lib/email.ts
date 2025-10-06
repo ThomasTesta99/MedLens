@@ -37,3 +37,47 @@ export const sendEmail = async ({
     return {success: true, message: successText};
 
 }
+
+type VerificationType = "verify-email" | "change-email";
+
+interface VerificationProps {
+    to: string;
+    subject: string,
+    templateParams: Record<string, string>
+}
+
+export const sendVerification = async ({
+    to, 
+    subject,
+    templateParams,
+} : VerificationProps) => {
+    const serviceID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
+    const templateID = "";
+    const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
+    const privateKey = process.env.EMAILJS_PRIVATE_KEY!;
+
+    const payload = {
+        service_id: serviceID, 
+        template_id: templateID, 
+        user_id: publicKey, 
+        accessToken: privateKey, 
+        template_params: {
+            to_email: to, 
+            subject, 
+            ...templateParams,
+        }
+    }
+
+    const result = await fetch("https://api.emailjs.com/api/v1.0/email/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", origin: "http://localhost" },
+        body: JSON.stringify(payload),
+    });
+
+    if(!result.ok){
+        throw new Error(`EmailJS failed: ${await result.text}`);
+    }
+
+    const successText = await result.text();
+    return {success: true, message: successText};
+}

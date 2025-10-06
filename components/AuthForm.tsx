@@ -47,7 +47,7 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
 
             if(result.success){
                 navigated = true;
-                router.prefetch("/")
+                router.prefetch("/");
                 router.push('/');
             }else{
                 setIsLoading(false);

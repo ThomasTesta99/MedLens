@@ -3,7 +3,7 @@ import { auth_schema } from "@/database/schema";
 import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { nextCookies } from "better-auth/next-js";
-import { sendEmail } from "./email";
+import { sendEmail, sendVerification } from "./email";
 
 export const auth = betterAuth({
   database: drizzleAdapter(db, {
@@ -27,7 +27,21 @@ export const auth = betterAuth({
     },
     deleteUser: { 
       enabled: true
-    } 
+    },
+    changeEmail: {
+      enabled: true, 
+      sendChangeEmailVerification: async ({user, newEmail, url, token}, request) => {
+        await sendVerification({
+          to: user.email, 
+          subject: "Approve email change", 
+          templateParams: {
+            user_name: user.name ?? "there", 
+            action_url: url, 
+            type: "Approve email change",
+          }
+        })
+      }
+    }
   },
 
   session: {
@@ -77,6 +91,21 @@ export const auth = betterAuth({
         resetLink: url,
       })
     } 
+  },
+
+  emailVerification: {
+    sendVerificationEmail: async ({user, url, token}, request) =>{
+      await sendVerification({
+        to: user.email, 
+        subject: "Verify your email", 
+        templateParams:{
+          user_name: user.name ?? "there", 
+          action_url: url, 
+          type: "Verify your email",
+        } 
+        
+      })
+    }
   },
   plugins: [nextCookies()],
   baseURL: process.env.NEXT_PUBLIC_BASE_URL!,
