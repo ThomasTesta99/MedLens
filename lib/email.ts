@@ -52,7 +52,7 @@ export const sendVerification = async ({
     templateParams,
 } : VerificationProps) => {
     const serviceID = process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID!;
-    const templateID = "";
+    const templateID = process.env.NEXT_PUBLIC_EMAILJS_VERIFY_TEMPLATE_ID!;
     const publicKey = process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY!;
     const privateKey = process.env.EMAILJS_PRIVATE_KEY!;
 
@@ -75,7 +75,7 @@ export const sendVerification = async ({
     });
 
     if(!result.ok){
-        throw new Error(`EmailJS failed: ${await result.text}`);
+        throw new Error(`EmailJS failed: ${await result.text()}`);
     }
 
     const successText = await result.text();

@@ -37,7 +37,7 @@ export const auth = betterAuth({
           templateParams: {
             user_name: user.name ?? "there", 
             action_url: url, 
-            type: "Approve email change",
+            type: `Approve email change to ${newEmail}`,
           }
         })
       }
@@ -90,7 +90,8 @@ export const auth = betterAuth({
         to: user.email, 
         resetLink: url,
       })
-    } 
+    },
+    requireEmailVerification: true,
   },
 
   emailVerification: {
@@ -103,9 +104,9 @@ export const auth = betterAuth({
           action_url: url, 
           type: "Verify your email",
         } 
-        
       })
-    }
+    },
+    sendOnSignUp: true,
   },
   plugins: [nextCookies()],
   baseURL: process.env.NEXT_PUBLIC_BASE_URL!,

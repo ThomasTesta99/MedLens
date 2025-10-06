@@ -1,7 +1,7 @@
 'use server'
 import { headers } from "next/headers"
 import { auth } from "../auth"
-import { Action, CreateUserInfo, SignInUserInfo } from "@/types/types"
+import { Action, CreateUserInfo, SignInUserInfo, User } from "@/types/types"
 import { validateWithArcjet } from "../arcjet"
 import { db } from "@/database/drizzle"
 import { users } from "@/database/schema"
@@ -200,5 +200,34 @@ export const getUserByEmail = async ({email} : {email : string}) => {
         success: false,
         message: 'Server error while fetching user',
         };
+    }
+}
+
+export const sendEmailVerification = async ({email, url} : {email:string, url: string}) => {
+    try {
+        const result = await auth.api.sendVerificationEmail({
+            body:{
+                email: email, 
+                callbackURL: url,
+            }
+        })
+
+        if(!result.status){
+            return {
+                success: false, 
+                message: "Failure to send verification email"
+            }
+        }else{
+            return {
+                success: true, 
+                message: "Verification email sent",
+            }
+        }
+    } catch (error) {
+        console.log(error)
+        return{
+            success: false, 
+            message: "Failed to send verification email. " + error as string,
+        }
     }
 }

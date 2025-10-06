@@ -1,8 +1,9 @@
-import { getUserSession } from '@/lib/user-actions/authActions'
+import { getUserSession, sendEmailVerification } from '@/lib/user-actions/authActions'
 import React from 'react'
 import { formatDate } from '../all-documents/page';
 import DangerAction from '@/components/DangerAction';
 import ChangePassword from '@/components/ChangePassword';
+import VerifyEmail from '@/components/VerifyEmail';
 
 const page = async () => {
     const session = await getUserSession();
@@ -12,6 +13,8 @@ const page = async () => {
         )
     }
     const user = session.user
+
+    
 
     return (
         <main className='mx-auto max-w-4xl px-6 sm:py-10 space-y-8'>
@@ -52,6 +55,12 @@ const page = async () => {
                        <p className='mt-2 font-semibold'>Change Password</p>
                        <p className='text-sm text-slate-400'>You must provide your old password in order to create a new one.</p>
                        <ChangePassword />
+                    </div>
+
+                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[100]">
+                       <p className='mt-2 font-semibold'>Verify Email</p>
+                       <p className='text-sm text-slate-400'>Verify your email by clicking the button below.</p>
+                        <VerifyEmail user = {user}/>
                     </div>
 
                     <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[99]">
