@@ -70,4 +70,4 @@ interface GeminiResponse {
   candidates?: GeminiCandidate[];
 }
 
-export type Action = 'password-reset' | 'verify-email';
+export type Action = 'password-reset' | 'verify-email' | 'change-email';

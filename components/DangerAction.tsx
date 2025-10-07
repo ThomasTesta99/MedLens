@@ -28,8 +28,6 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
             if(userDocuments?.length == 0){
                 if(type === "documents"){
                     setError("No User Documents");
-                }else{
-                    setError("You has no docs");
                 }
                 return;
             }
@@ -51,7 +49,7 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
             
         } catch (error) {
             console.log(error);
-            setError(null);
+            setError(error as string);
         }finally{
             setIsLoading(false);
         }

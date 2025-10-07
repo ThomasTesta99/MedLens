@@ -4,6 +4,7 @@ import { formatDate } from '../all-documents/page';
 import DangerAction from '@/components/DangerAction';
 import ChangePassword from '@/components/ChangePassword';
 import VerifyEmail from '@/components/VerifyEmail';
+import ChangeEmail from '@/components/ChangeEmail';
 
 const page = async () => {
     const session = await getUserSession();
@@ -13,7 +14,7 @@ const page = async () => {
         )
     }
     const user = session.user
-
+    const emailVerified = user.emailVerified;
     
 
     return (
@@ -57,11 +58,21 @@ const page = async () => {
                        <ChangePassword />
                     </div>
 
-                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[100]">
-                       <p className='mt-2 font-semibold'>Verify Email</p>
-                       <p className='text-sm text-slate-400'>Verify your email by clicking the button below.</p>
-                        <VerifyEmail user = {user}/>
-                    </div>
+                    {emailVerified ? 
+                        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[100]">
+                            <p className='mt-2 font-semibold'>Change Email</p>
+                            <p className='text-sm text-slate-400'>Change your email by clicking the button.</p>
+                            <ChangeEmail user = {user}/>
+                        </div>
+                        :
+                        <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[100]">
+                            <p className='mt-2 font-semibold'>Verify Email</p>
+                            <p className='text-sm text-slate-400'>Verify your email by clicking the button below.</p>
+                            <VerifyEmail user = {user}/>
+                        </div>
+                    
+                    }
+
 
                     <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[99]">
                         <p className='mt-2 font-semibold'>Delete All Documents</p>

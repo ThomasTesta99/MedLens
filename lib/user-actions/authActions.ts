@@ -129,7 +129,8 @@ export const resetUserPassword = async ({password, token}: {password: string, to
             body:{
                 newPassword: password, 
                 token: token,
-            }
+            },
+            headers: await headers(),
         })
 
         if(!data.status){
@@ -144,7 +145,6 @@ export const resetUserPassword = async ({password, token}: {password: string, to
             }
         }
     } catch (error) {
-        console.log(error);
         return{
             success: false, 
             message: "Failed to reset password: " + error as string,
@@ -158,7 +158,8 @@ export const sendResetPasswordEmail = async ({email, url}: {email: string, url: 
             body:{
                 email: email, 
                 redirectTo: url, 
-            }
+            },
+            headers: await headers(),
         });
 
         if(!result.status){
@@ -195,7 +196,6 @@ export const getUserByEmail = async ({email} : {email : string}) => {
             user: foundUser,
         };
     } catch (error) {
-        console.error('Error in getUserByEmail:', error);
         return {
         success: false,
         message: 'Server error while fetching user',
@@ -209,7 +209,8 @@ export const sendEmailVerification = async ({email, url} : {email:string, url: s
             body:{
                 email: email, 
                 callbackURL: url,
-            }
+            },
+            headers: await headers(), 
         })
 
         if(!result.status){
@@ -224,10 +225,39 @@ export const sendEmailVerification = async ({email, url} : {email:string, url: s
             }
         }
     } catch (error) {
-        console.log(error)
         return{
             success: false, 
             message: "Failed to send verification email. " + error as string,
+        }
+    }
+}
+
+export const changeEmailRequest = async ({newEmail, url = '/'}: {newEmail : string, url?: string}) => {
+    try {
+        const result = await auth.api.changeEmail({
+            body:{
+                newEmail: newEmail, 
+                callbackURL: url
+            },
+            headers: await headers(),
+        })
+
+        if(!result.status){
+            return {
+                success: false, 
+                message: "Failed to send change email approval",
+            }
+        }else{
+            return {
+                success: true, 
+                message: "Send change email approval",
+            }
+        }
+    } catch (error) {
+        console.log(error);
+        return{
+            success: false, 
+            message: "Failed to send change email approval."
         }
     }
 }
