@@ -187,7 +187,6 @@ body {
 
   /* Upload */
 
-  @layer components {
   .upload-card {
     @apply rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur max-w-6xl;
   }
@@ -234,7 +233,7 @@ body {
   .upload-preview {
     @apply mt-4 rounded-xl border border-white/10 overflow-hidden;
   }
-}
+
 
 
 }

@@ -1,5 +1,6 @@
 'use client'
 
+import { LABELS, UNKNOWN_LABEL } from '@/constants';
 import { Job, JobType } from '@/lib/entityUtils';
 import { User } from '@/types/types';
 import { useRouter } from 'next/navigation';
@@ -22,12 +23,11 @@ export async function runAllJobs(
   for(let i = 0; i < maxRuns; i++){
     const res = await fetch("/api/jobs/run", {method: "POST"});
     if(!res.ok) {
-      console.log("ERROR");
-      return;
+      throw new Error("Error running job");
     }
     const data = (await res.json()) as Job;
 
-    if(opts.onTick) opts.onTick(data.jobType);
+    if(opts.onTick) opts.onTick(data.nextJobType);
     if(!data.processed) break;
   }
 }
@@ -64,7 +64,12 @@ const Upload = ({user}: {user: User}) => {
     setIsLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    if(!file) return;
+    if(file == null){
+      setError(null);
+      setStatus(null);
+      setIsLoading(false);
+      return;
+    }
     formData.append("file", file);
 
     try {
@@ -79,7 +84,7 @@ const Upload = ({user}: {user: User}) => {
         return;
       }
 
-      setStatus("Processing complete");
+      setStatus("File Uploaded. Reading document...");
       
       const json = await res.json();
       const id = json.id;
@@ -87,7 +92,13 @@ const Upload = ({user}: {user: User}) => {
 
       await runAllJobs({
         maxRuns: 50,
-        onTick: (t) => setStatus(t ? `Finished ${t}...` : "Running Jobs...") // needs to be fixed
+        onTick: (jobType) => {
+          if(!jobType){
+            return;
+          }
+          const message = LABELS[jobType];
+          setStatus(message);
+        }
       })
 
       setStatus("Done");
@@ -149,6 +160,7 @@ const Upload = ({user}: {user: User}) => {
       {isLoading && (
         <div className='flex flex-col w-full items-center gap-3 p-5'>
           <h2 className='text-2xl text-slate-300 font-semibold'>{status}</h2>
+          <p className="text-sm text-slate-200">This could take a few minutes.</p>
           <ClipLoader color='white'/>
         </div>
       )}

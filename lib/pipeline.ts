@@ -27,17 +27,15 @@ export async function clearJobs() {
     }
 }
 
-export async function runOneJob(): Promise<Entity.Job> {
-    console.log("Inside Run one job") 
+export async function runOneJob(): Promise<Entity.Job> { 
     const job = await db.query.jobs.findFirst({ 
         where: eq(jobs.status, "queued"), 
         columns: {id: true, type: true, payload: true,} 
     }); 
     if(!job) return {processed: false,}
-    console.log(job)
     const jobType = job.type as Entity.JobType;
     const payload = JSON.parse(job.payload) as Partial<Entity.EntitiesPayload> & Partial<Entity.JobPayloadBase>;
-
+    let nextJob : Entity.JobType | undefined = undefined;
     try {
         if (jobType === "sentences") {
             const documentId = payload.documentId!;
@@ -55,6 +53,7 @@ export async function runOneJob(): Promise<Entity.Job> {
                 );
             }
             await db.update(documents).set({ status: "processing" }).where(eq(documents.id, documentId));
+            nextJob = "entities"
         }
 
         if (jobType === "entities") {
@@ -126,6 +125,7 @@ export async function runOneJob(): Promise<Entity.Job> {
                     status: "queued",
                 });
                 await db.update(documents).set({ status: "processing" }).where(eq(documents.id, docId));
+                nextJob = "entities"
             } else {
                 await db.insert(jobs).values({
                     id: crypto.randomUUID(), 
@@ -133,6 +133,7 @@ export async function runOneJob(): Promise<Entity.Job> {
                     payload: JSON.stringify({documentId: docId}),
                     status: "queued",
                 })
+                nextJob = "summarize"
             }
         }
 
@@ -191,11 +192,12 @@ export async function runOneJob(): Promise<Entity.Job> {
                 questions: JSON.stringify(out.questions), 
                 citations: out.citations
             })
+            nextJob = undefined;
+            await db.update(documents).set({status: "Ready"}).where(eq(documents.id, payload.documentId!));
         }
-        await db.update(documents).set({status: "Ready"}).where(eq(documents.id, payload.documentId!));
         await db.update(jobs).set({ status: "finished" }).where(eq(jobs.id, job.id));
         await db.delete(jobs).where(eq(jobs.status, "finished"))
-        return { processed: true, jobType: jobType };
+        return { processed: true, jobType: jobType, nextJobType: nextJob };
     } catch (error) {
         await db.update(jobs).set({ status: "error", error: String(error) }).where(eq(jobs.id, job.id));
         await db.update(documents).set({error: String(error)}).where(eq(documents.id, payload.documentId!))

@@ -24,7 +24,7 @@ const ChangePassword = () => {
                 return;
             }else{
                 console.log("Password Changed");
-                setshowModal(false);          // <-- close here
+                setshowModal(false);          
                 setOldPassword('');
                 setNewPassword('');
                 setConfirmNewPassword('');

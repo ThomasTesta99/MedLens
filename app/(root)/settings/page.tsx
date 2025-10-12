@@ -52,11 +52,6 @@ const page = async () => {
             <section className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur p-6">
                 <h2 className='text-xl font-bold'>Manage Account</h2>
                 <div className='mt-4 grid gap-4 sm:grid-cols-2'>
-                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[100]">
-                       <p className='mt-2 font-semibold'>Change Password</p>
-                       <p className='text-sm text-slate-400'>You must provide your old password in order to create a new one.</p>
-                       <ChangePassword />
-                    </div>
 
                     {emailVerified ? 
                         <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[100]">
@@ -70,9 +65,13 @@ const page = async () => {
                             <p className='text-sm text-slate-400'>Verify your email by clicking the button below.</p>
                             <VerifyEmail user = {user}/>
                         </div>
-                    
                     }
 
+                    <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[100]">
+                       <p className='mt-2 font-semibold'>Change Password</p>
+                       <p className='text-sm text-slate-400'>You must provide your old password in order to create a new one.</p>
+                       <ChangePassword />
+                    </div>
 
                     <div className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur px-4 z-[99]">
                         <p className='mt-2 font-semibold'>Delete All Documents</p>

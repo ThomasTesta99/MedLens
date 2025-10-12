@@ -1,3 +1,5 @@
+import { JobType } from "@/lib/entityUtils";
+
 export const TABLE_LENGTH = 10;
 
 export const menuBarLinks = [
@@ -25,3 +27,17 @@ export const documents = [
   { id: 9,  title: 'Shoulder X-ray — Mar 2025',     uploaded: '2 months ago',  status: 'PROCESSING' },
   { id: 10, title: 'Cervical Spine X-ray — Feb 2025', uploaded: '3 months ago', status: 'READY' },
 ];
+
+export const PROCESSING_ORDER: JobType[] = [
+  "sentences",
+  "entities",
+  "summarize",
+]
+
+export const LABELS: Record<JobType, string> = {
+  sentences: "Reading document sentences...",
+  entities: "Picking out medical terms and measurments...", 
+  summarize: "Writing patient friendly summary...",
+}
+
+export const UNKNOWN_LABEL = "Working...";

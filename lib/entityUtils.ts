@@ -49,7 +49,7 @@ export type JobType = "sentences" | "entities" | "summarize";
 export interface JobPayloadBase { documentId: string }
 export interface EntitiesPayload extends JobPayloadBase { base?: number }
 
-export type Job = { processed: boolean; jobType?: JobType; error?: string };
+export type Job = { processed: boolean; jobType?: JobType; error?: string, nextJobType?: JobType};
 
 // ──────────────────────────────────────────────────────────────────────────────
 // HELPERS – Entities

@@ -35,7 +35,7 @@ export async function POST(req: Request){
         let ingestMethod: "pdf_text" | "ocr" = "pdf_text";
 
         const buf = Buffer.from(await file.arrayBuffer());
-
+        
         if(isPdf){
             const {text, pages} = await extractPdfText(buf);
             if(!text){
