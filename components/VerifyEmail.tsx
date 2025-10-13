@@ -26,7 +26,7 @@ const VerifyEmail = ({user}: {user: User}) => {
                 setError(result.message);
             }
         } catch (error) {
-            console.log(error);
+            setError(error as string);
         }
     }
     return (

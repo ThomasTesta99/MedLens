@@ -9,6 +9,7 @@ export async function middleware(req: NextRequest) {
     "/sign-up",
     "/forgot-password",
     "/reset-password",
+    "/must-verify",
   ].some((p) => pathname.startsWith(p));
 
 

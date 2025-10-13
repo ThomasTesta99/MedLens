@@ -6,6 +6,7 @@ import { validateWithArcjet } from "../arcjet"
 import { db } from "@/database/drizzle"
 import { users } from "@/database/schema"
 import { eq } from "drizzle-orm"
+import { APIError } from "better-auth"
 
 export const signInUser = async ({email, password} : SignInUserInfo) => {
     try {
@@ -19,12 +20,26 @@ export const signInUser = async ({email, password} : SignInUserInfo) => {
 
         return {
             success: true, 
-            message: "User successfuly logged in." + user,
+            message: "User successfuly logged in.",
+            user,
         }
-    } catch (error) {
+    } catch (err) {
+        const error = err as APIError
+
+        const code = error.body?.code;
+        const message = error.body?.message ?? error.message;
+
+        if(code === "EMAIL_NOT_VERIFIED"){
+            return{
+                success: false, 
+                code: code,
+                message: "Please verify your email before signing in."
+            }
+        }
         return {
             success: false,
-            message: "Failed to log in: " + error,
+            code, 
+            message: "Failed to log in: " + message,
         }
     }
 }
@@ -42,12 +57,17 @@ export const signUpUser = async ({name, email, password} : CreateUserInfo) => {
 
         return {
             success: true, 
-            message: "Signed Up sucessfully. " + newUser,
+            message: "Signed Up sucessfully. ", 
+            newUser,
         }
-    } catch (error) {
+    } catch (err) {
+        const error = err as APIError;
+        const code = error.body?.code;
+        const message = error.body?.message ?? error.message;
         return {
             success: false,
-            message: "Failed to sign up user: " + error,
+            code: code,
+            message: message,
         }
     }
 }

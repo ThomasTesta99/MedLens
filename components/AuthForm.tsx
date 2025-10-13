@@ -51,7 +51,11 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
                 router.push('/');
             }else{
                 setIsLoading(false);
-                setError(result.message);
+                if(result.code === "EMAIL_NOT_VERIFIED"){
+                    router.push('/must-verify');
+                }else{
+                    setError(result.message);
+                }
             }
         } catch (error) {
             setIsLoading(false);
