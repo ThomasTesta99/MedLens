@@ -44,7 +44,7 @@ const page = async () => {
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur h-full flex flex-col">
               <div className="flex items-center justify-center gap-2 mb-3">
                 <Image src="/icons/shield.svg" alt="shield" width={28} height={28} className="invert opacity-50" />
-                <h4 className="text-2xl font-semibold text-white">Safety</h4>
+                <h4 className="text-2xl font-semibold">Safety</h4>
               </div>
               <p className="text-sm sm:text-base text-slate-300 leading-relaxed text-center">
                 MedLens is for education only — not medical advice, diagnosis, or treatment.
@@ -56,7 +56,7 @@ const page = async () => {
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur h-full flex flex-col">
               <div className="flex items-center justify-center gap-2 mb-3">
                 <Image src="/icons/lock.svg" alt="lock" width={28} height={28} className="invert opacity-50" />
-                <h4 className="text-2xl font-semibold text-white">Security</h4>
+                <h4 className="text-2xl font-semibold">Security</h4>
               </div>
               <p className="text-sm sm:text-base text-slate-300 leading-relaxed text-center">
                 Your files stay private to your account. Data is encrypted in transit and at rest,

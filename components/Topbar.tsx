@@ -1,6 +1,7 @@
 'use client'
 import { menuBarLinks } from '@/constants'
 import { signOutUser } from '@/lib/user-actions/authActions'
+import { UserProps } from '@/types/types'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
@@ -77,12 +78,12 @@ const Topbar = ({user} : UserProps) => {
                     className="rounded-full object-cover"
                 />
                 ) : (
-                <p className="text-xl font-bold text-white">{user?.name?.[0] ?? ' '}</p>
+                <p className="text-xl font-bold">{user?.name?.[0] ?? ' '}</p>
                 )}
             </div>
 
             <div className="footer-email">
-                <h1 className="text-sm truncate font-semibold text-white">{user?.name ?? ' '}</h1>
+                <h1 className="text-sm truncate font-semibold">{user?.name ?? ' '}</h1>
                 <p className="text-sm truncate font-normal text-gray-300">{user?.email ?? ' '}</p>
             </div>
 

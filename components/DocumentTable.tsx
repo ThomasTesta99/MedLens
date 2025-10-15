@@ -26,7 +26,7 @@ export default function DocumentTable({documentList} :  {documentList? : Documen
     return (
       <div className="mx-auto w-full max-w-6xl">
         <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center backdrop-blur">
-          <h2 className="text-xl font-semibold tracking-tight text-white">No recent documents</h2>
+          <h2 className="text-xl font-semibold tracking-tight">No recent documents</h2>
           <p className="mt-1 text-medium text-slate-300">
             Upload your first report to see it here.
           </p>
@@ -67,7 +67,7 @@ export default function DocumentTable({documentList} :  {documentList? : Documen
                     onClick={() => router.push(`/document/${doc.id}`)}
                   >
                     <td className="px-3 py-3">
-                      <div className="font-medium text-white">{doc.title}</div>
+                      <div className="font-medium">{doc.title}</div>
                     </td>
                     <td className="px-3 py-3 text-slate-300">{formatDate(doc.createdAt)}</td>
                     <td className="px-3 py-3">
@@ -100,7 +100,7 @@ export default function DocumentTable({documentList} :  {documentList? : Documen
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <div className="font-medium text-white">{doc.title}</div>
+                    <div className="font-medium">{doc.title}</div>
                     <div className="text-xs text-slate-400">{formatDate(doc.createdAt)}</div>
                   </div>
                   <span 

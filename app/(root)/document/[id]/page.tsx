@@ -86,14 +86,14 @@ const page = async ({params}: {params : Promise<{id : string}>}) => {
 
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+          <div className="content-box p-6">
             <h2 className="text-xl font-semibold mb-3">Plain-English Summary</h2>
             <p className="text-slate-200 leading-7 whitespace-pre-wrap">
               {summary?.summary ?? "No summary available."}
             </p>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+          <div className="content-box p-6">
             <h3 className="text-lg font-semibold mb-3">Common Questions</h3>
             {questions.length ? (
               <ul className="space-y-1">
@@ -108,14 +108,14 @@ const page = async ({params}: {params : Promise<{id : string}>}) => {
             )}
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
+          <div className="content-box p-6">
             <h3 className="text-lg font-semibold mb-3">Citations</h3>
             <CitationsList items={citations} />
           </div>
         </div>
 
         <aside className="space-y-6">
-          <div className='rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur'>
+          <div className='content-box p-6'>
             <h3 className="text-lg font-semibold mb-4">Key Terms & Findings</h3>
               {grouped.size === 0 ? (
                 <p className="text-slate-300">No entities detected.</p>
@@ -133,7 +133,7 @@ const page = async ({params}: {params : Promise<{id : string}>}) => {
                           .map((e) => (
                             <span
                               key={e.id}
-                              className="text-sm rounded-full border border-white/10 bg-white/10 px-3 py-1 text-slate-200"
+                              className="entity"
                               title={[
                                 e.label ? `label: ${e.label}` : null,
                                 e.score != null ? `score: ${e.score}` : null,

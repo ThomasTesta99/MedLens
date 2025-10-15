@@ -142,7 +142,7 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
                                     Cancel
                                 </button>
                                 <button 
-                                    className="rounded-lg bg-red-600 px-4 py-2 text-white cursor-pointer hover:bg-red-700 disabled:opacity-50" 
+                                    className="rounded-lg bg-red-600 px-4 py-2 cursor-pointer hover:bg-red-700 disabled:opacity-50" 
                                     onClick={primaryAction}
                                     disabled={primaryDisabled}
                                 >

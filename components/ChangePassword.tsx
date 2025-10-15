@@ -122,7 +122,7 @@ const ChangePassword = () => {
                                 </button>
 
                                 <button 
-                                    className='rounded-lg bg-gray-600 px-4 py-2 text-white cursor-pointer hover:bg-gray-700 disabled:opacity-50'
+                                    className='rounded-lg bg-gray-600 px-4 py-2 cursor-pointer hover:bg-gray-700 disabled:opacity-50'
                                     disabled={buttonDisabled}
                                     onClick={handlePasswordChange}
                                 >
