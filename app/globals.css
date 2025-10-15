@@ -235,40 +235,191 @@ body {
   }
 
   .content-box{
-    @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur
+    @apply rounded-2xl border border-white/10 bg-white/5 backdrop-blur;
   }
 
   /* All Documents Page*/
   .all-docs-grid{
-    @apply grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6
+    @apply grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6;
   }
 
   .document-link{
-    @apply mt-4 flex items-center gap-2 text-indigo-300 text-sm opacity-0 group-hover:opacity-100 transition
+    @apply mt-4 flex items-center gap-2 text-indigo-300 text-sm opacity-0 group-hover:opacity-100 transition;
   }
 
   .status{
-    @apply shrink-0 inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium border
+    @apply shrink-0 inline-flex items-center rounded-full px-2.5 py-0.5 text-[11px] font-medium border;
   }
 
   /* Document Page */
 
   .entity{
-    @apply text-sm rounded-full border border-white/10 bg-white/10 px-3 py-1 text-slate-200
+    @apply text-sm rounded-full border border-white/10 bg-white/10 px-3 py-1 text-slate-200;
   }
 
   /*Security Page*/
 
-  .help-title{
-    @apply text-xl font-semibold
+  .info-title{
+    @apply text-xl font-semibold;
   }
 
   .help-text{
-    @apply mt-1 text-slate-300 text-sm leading-6
+    @apply mt-1 text-slate-300 text-sm leading-6;
   }
 
   .help-link{
-    @apply text-indigo-300 hover:text-indigo-200 underline
+    @apply text-indigo-300 hover:text-indigo-200 underline;
   }
-}
 
+  /* Security */
+
+  .security-list{
+    @apply mt-3 space-y-2 text-slate-300 text-sm;
+  }
+
+  /*Terms */
+
+  .terms-text{
+    @apply mt-2 text-slate-300 text-sm leading-6;
+  }
+
+  /* Home Page */
+
+  .home-subtitle{
+    @apply mx-auto max-w-2xl text-sm sm:text-base text-slate-300;
+  }
+
+  .disclaimer-grid{
+    @apply grid grid-cols-1 sm:grid-cols-2 gap-4 items-stretch;
+  }
+
+  .disclaimer-text{
+    @apply text-sm sm:text-base text-slate-300 leading-relaxed text-center;
+  }
+
+  .icon-header{
+    @apply flex items-center justify-center gap-2 mb-3;
+  }
+
+  /* Change/Danger Actions */
+
+  .success-text{
+    @apply mt-2 text-green-400 font-semibold;
+  }
+
+  .error-text{
+    @apply mt-2 text-red-600 font-semibold;
+  }
+
+  .change-title{
+    @apply text-lg font-semibold text-gray-900;
+  }
+
+  .change-button{
+    @apply rounded-lg bg-gray-600 px-4 py-2 cursor-pointer hover:bg-gray-700 disabled:opacity-50;
+  }
+
+  .change-label{
+    @apply mt-4 block text-sm font-medium text-gray-700;
+  }
+
+  .close-cancel-button{
+    @apply mt-2 rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer;
+  }
+
+  .change-input{
+    @apply mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:ring;
+  }
+
+  .modal-overlay{
+    @apply fixed inset-0 z-50 flex items-center justify-center;
+  }
+
+  .modal-bg{
+    @apply fixed inset-0 bg-black/60 p-6 rounded-2xl;
+  }
+
+  .modal-card{
+    @apply relative z-10 w-full max-w-md rounded-2xl bg-white shadow-xl p-3;
+  }
+
+  /* Citation List */
+
+  .citation-container{
+    @apply rounded-xl border border-white/10 bg-white/5 p-3;
+  }
+
+  .citation-summary{
+    @apply list-none cursor-pointer select-none flex items-center justify-between;
+  }
+
+  .citation-summary-text{
+    @apply text-slate-200 group-open:hidden;
+  }
+
+  .citation-summary-count{
+    @apply ml-auto inline-flex items-center gap-2 text-indigo-300 group-hover:text-indigo-200;
+  }
+
+  .citation-summary-icon{
+    @apply size-4 transition-transform duration-200 group-open:rotate-180;
+  }
+
+  .citations-list {
+    @apply mt-3 space-y-4 hidden group-open:block;
+  }
+
+  .citation-item {
+    @apply rounded-xl border border-white/10 bg-white/5 p-2;
+  }
+
+  .citation-header {
+    @apply flex items-start gap-3;
+  }
+
+  .citation-badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-white/10 text-slate-200 border border-white/15;
+  }
+
+  .citation-text {
+    @apply text-slate-200 leading-6;
+  }
+
+  /* Sources section */
+  .sources-details {
+    @apply mt-3 group;
+  }
+
+  .sources-summary {
+    @apply list-none cursor-pointer select-none text-sm text-indigo-300 hover:text-indigo-200;
+  }
+
+  .sources-summary-icon {
+    @apply size-4 transition-transform duration-200 group-open:rotate-180;
+  }
+
+  .sources-list {
+    @apply mt-3 space-y-2;
+  }
+
+  .source-item {
+    @apply rounded-lg border border-white/10 bg-white/5 p-3;
+  }
+
+  .source-header {
+    @apply flex items-start gap-2;
+  }
+
+  .source-badge {
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-transparent text-slate-300 border border-white/15;
+  }
+
+  .source-text {
+    @apply text-sm text-slate-200 leading-6;
+  }
+
+  .no-sources {
+    @apply text-slate-400 text-sm;
+  }
+  
+}

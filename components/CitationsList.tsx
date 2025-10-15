@@ -12,15 +12,15 @@ const CitationsList = ({ items }: { items: CitationProps[] }) => {
   }
 
   return (
-    <details className="group rounded-xl border border-white/10 bg-white/5 p-3">
-      <summary className="list-none cursor-pointer select-none flex items-center justify-between">
-        <p className=" text-slate-200 group-open:hidden">
+    <details className="group citation-container">
+      <summary className="citation-summary">
+        <p className="citation-summary-text">
           Citations show which original report sentences support each summary sentence.
         </p>
-        <span className="ml-auto inline-flex items-center gap-2 text-indigo-300 group-hover:text-indigo-200">
+        <span className="citation-summary-count">
           <span className="text-sm">({items.length})</span>
           <svg
-            className="size-4 transition-transform duration-200 group-open:rotate-180"
+            className="citation-summary-icon"
             viewBox="0 0 20 20"
             fill="currentColor"
             aria-hidden
@@ -34,12 +34,12 @@ const CitationsList = ({ items }: { items: CitationProps[] }) => {
         </span>
       </summary>
 
-      <ul className="mt-3 space-y-4 hidden group-open:block">
+      <ul className="citations-list">
         {items.map((c, i) => (
           <li key={i} className="rounded-xl border border-white/10 bg-white/5 p-2">
             <div className="flex items-start gap-3">
               <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-white/10 text-slate-200 border border-white/15">
-                Sentence {c.targetIdx}
+                {c.targetIdx}
               </span>
               <p className="text-slate-200 leading-6">{c.targetText}</p>
             </div>

@@ -50,37 +50,37 @@ const ChangeEmail = ({user} : {user: User}) => {
             <button className="btn-ghost mb-2 mt-2" onClick={openModal}>Change Email</button>
 
             {showModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    <div className="fixed inset-0 bg-black/60 p-6 rounded-2xl">
-                        <div className="relative z-10 w-full max-w-md rounded-2xl bg-white shadow-xl p-3">
-                            <h2 className="text-lg font-semibold text-gray-900">
+                <div className="modal-overlay">
+                    <div className="modal-bg">
+                        <div className="modal-card">
+                            <h2 className="change-title">
                                 Change Email
                             </h2>
                             <p className="mt-2 text-sm text-gray-600">
                                 Please enter your new email below.
                             </p>
 
-                            <label className="mt-4 block text-sm font-medium text-gray-700">
+                            <label className="change-label">
                                 New Email
                                 <input 
                                     type="text" 
-                                    className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:ring"
+                                    className="change-input"
                                     value={newEmail}
                                     onChange={(e) => setNewEmail(e.target.value)} 
                                 />
                             </label>
 
                             {error && (
-                                <p className="mt-2 text-red-600 font-semibold">{error}</p>
+                                <p className="error-text">{error}</p>
                             )}
 
                             {success && (
-                                <p className="mt-2 text-green-400 font-semibold">A confirmation link has been sent to your current email. Please check your inbox and click the link to approve the change. Once approved, your account email will be updated.</p>
+                                <p className="success-text">A confirmation link has been sent to your current email. Please check your inbox and click the link to approve the change. Once approved, your account email will be updated.</p>
                             )}
 
                             <div className="mt-6 flex flex-row justify-end">
                                 <button 
-                                    className="mt-2 rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                    className="close-cancel-button"
                                     onClick={() => {
                                         setError(null);
                                         setNewEmail("");
@@ -94,7 +94,7 @@ const ChangeEmail = ({user} : {user: User}) => {
 
                                 {!success && (
                                     <button 
-                                        className="rounded-lg bg-gray-600 px-4 py-2 cursor-pointer hover:bg-gray-700 disabled:opacity-50"
+                                        className="change-button"
                                         disabled={buttonDisabled}
                                         onClick={handleChangeEmail}
                                     >

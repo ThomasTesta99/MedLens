@@ -14,17 +14,17 @@ const page = () => {
         </p>
       </header>
 
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-        <h2 className="text-xl font-semibold">Overview</h2>
+      <section className="content-box p-6">
+        <h2 className="info-title">Overview</h2>
         <p className="mt-2 text-slate-300 text-sm leading-6">
           This page explains what information the app uses, how it&apos;s handled, and what you can
           expect today. It&apos;s informational only—no medical advice, diagnosis, or treatment.
         </p>
       </section>
 
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-        <h2 className="text-xl font-semibold">What We Do Today</h2>
-        <ul className="mt-3 space-y-2 text-slate-300 text-sm">
+      <section className="content-box p-6">
+        <h2 className="info-title">What We Do Today</h2>
+        <ul className="security-list">
           <li>• You upload medical documents and can view summaries with citations.</li>
           <li>• Your documents are tied to your account; other users cannot access them.</li>
           <li>• You can delete your documents and their generated data from your account.</li>
@@ -32,9 +32,9 @@ const page = () => {
         </ul>
       </section>
 
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-        <h2 className="text-xl font-semibold">Your Data & Controls</h2>
-        <ul className="mt-3 space-y-2 text-slate-300 text-sm">
+      <section className="content-box p-6">
+        <h2 className="info-title">Your Data & Controls</h2>
+        <ul className="security-list">
           <li>• <strong>Uploads:</strong> Files you add (e.g., PDFs) and basic metadata (title, timestamps).</li>
           <li>• <strong>Derived data:</strong> Sentences, entities, summaries, and citations created from your files.</li>
           <li>• <strong>Controls:</strong> Delete your documents (and derived data) any time from the document page.</li>
@@ -42,32 +42,32 @@ const page = () => {
         </ul>
       </section>
 
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-        <h2 className="text-xl font-semibold">Security (At a Glance)</h2>
+      <section className="content-box p-6">
+        <h2 className="info-title">Security (At a Glance)</h2>
         <p className="mt-2 text-slate-300 text-sm">
           We aim for sensible defaults and incremental hardening. We won&apos;t list controls here that
           the app doesn&apos;t implement yet.
         </p>
-        <ul className="mt-3 space-y-2 text-slate-300 text-sm">
+        <ul className="security-list">
           <li>• Account sign-in is required to view your documents.</li>
           <li>• Admin access is limited to development/maintenance (no routine human review).</li>
           <li>• Features like 2FA, device/session management UIs, and exports may be added over time.</li>
         </ul>
       </section>
 
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-        <h2 className="text-xl font-semibold">What We Don&apos;t Do</h2>
-        <ul className="mt-3 space-y-2 text-slate-300 text-sm">
+      <section className="content-box p-6">
+        <h2 className="info-title">What We Don&apos;t Do</h2>
+        <ul className="security-list">
           <li>• We don&apos;t provide medical advice. Always consult a clinician.</li>
           <li>• We don&apos;t claim regulatory compliance (e.g., HIPAA/GDPR) at this time.</li>
           <li>• We don&apos;t sell your uploads to third parties.</li>
         </ul>
       </section>
 
-      <section className="rounded-2xl border border-white/10 bg-white/5 p-6 backdrop-blur">
-        <h2 className="text-xl font-semibold">Roadmap</h2>
+      <section className="content-box p-6">
+        <h2 className="info-title">Roadmap</h2>
         <p className='text-sm text-slate-400'>What&apos;s planned doen the line:</p>
-        <ul className="mt-3 space-y-2 text-slate-300 text-sm">
+        <ul className="security-list">
           <li>□ Data export (download my documents and summaries)</li>
           <li>□ Retention settings (auto-delete after N days)</li>
           <li>□ Consent preferences (opt in/out for future model improvements)</li>

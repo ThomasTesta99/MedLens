@@ -47,27 +47,27 @@ const ChangePassword = () => {
             <button className="mb-2 mt-2 btn-ghost" onClick={openModal}>Change Password</button>
 
             {showModal && (
-                <div className="fixed inset-0 z-[100] flex justify-center items-center">
-                    <div className="fixed inset-0 bg-black/60 rounded-2xl p-6">
-                        <div className="relative z-[101] w-full max-w-md rounded-2xl bg-white shadow-xl p-3">
-                            <h2 className='text-lg font-semibold text-gray-900'>Change Password</h2>
+                <div className="modal-overlay">
+                    <div className="modal-bg">
+                        <div className="modal-card">
+                            <h2 className='change-title'>Change Password</h2>
                             <p className="mt-2 text-sm text-gray-600">Please provide your old password to create a new one.</p>
-                            <label className="mt-4 block text-sm font-medium text-gray-700">
+                            <label className="change-label">
                                 Old Password
                                 <input 
                                     type="password" 
-                                    className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:ring text-black" 
+                                    className="change-input" 
                                     value={oldPassword}
                                     onChange={(e) => setOldPassword(e.target.value)}
                                     disabled={isLoading}
                                 />
                             </label>
                             
-                            <label className="mt-4 block text-sm font-medium text-gray-700">
+                            <label className="change-label">
                                 New Password
                                 <input 
                                     type="password" 
-                                    className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:ring text-black" 
+                                    className="change-input" 
                                     value={newPassword}
                                     onChange={(e) => {
                                         const value = e.target.value
@@ -82,11 +82,11 @@ const ChangePassword = () => {
                                 />
                             </label>
 
-                            <label className="mt-4 block text-sm font-medium text-gray-700">
+                            <label className="change-label">
                                 Confirm New Password
                                 <input 
                                     type="password" 
-                                    className="mt-2 w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:ring text-black" 
+                                    className="change-input" 
                                     value={confirmNewPassword}
                                     onChange={(e) => {
                                         const value = e.target.value
@@ -103,12 +103,12 @@ const ChangePassword = () => {
                             </label>
 
                             {error && (
-                                <p className="mt-2 text-red-600 font-semibold">{error}</p>
+                                <p className="error-text">{error}</p>
                             )}
 
                             <div className="mt-6 flex flex-row justify-end">
                                 <button 
-                                    className="mt-2 rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer"
+                                    className="close-cancel-button"
                                     onClick={() => {
                                         setError(null);
                                         setOldPassword("");
@@ -122,7 +122,7 @@ const ChangePassword = () => {
                                 </button>
 
                                 <button 
-                                    className='rounded-lg bg-gray-600 px-4 py-2 cursor-pointer hover:bg-gray-700 disabled:opacity-50'
+                                    className='change-button'
                                     disabled={buttonDisabled}
                                     onClick={handlePasswordChange}
                                 >
