@@ -319,8 +319,16 @@ body {
     @apply rounded-lg bg-gray-600 px-4 py-2 cursor-pointer hover:bg-gray-700 disabled:opacity-50;
   }
 
+  .danger-button{
+    @apply rounded-lg bg-red-600 px-4 py-2 cursor-pointer hover:bg-red-700 disabled:opacity-50;
+  }
+
   .change-label{
     @apply mt-4 block text-sm font-medium text-gray-700;
+  }
+
+  .checkbox-label{
+    @apply mt-4 flex items-start gap-2 text-sm text-gray-700;
   }
 
   .close-cancel-button{
@@ -364,62 +372,46 @@ body {
   .citation-summary-icon{
     @apply size-4 transition-transform duration-200 group-open:rotate-180;
   }
-
-  .citations-list {
-    @apply mt-3 space-y-4 hidden group-open:block;
+  
+  .citations-list{
+    @apply mt-3 space-y-4 hidden;
   }
 
-  .citation-item {
+  .citation-item{
     @apply rounded-xl border border-white/10 bg-white/5 p-2;
   }
 
-  .citation-header {
-    @apply flex items-start gap-3;
-  }
-
-  .citation-badge {
+  .citation-badge{
     @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-white/10 text-slate-200 border border-white/15;
   }
 
-  .citation-text {
-    @apply text-slate-200 leading-6;
-  }
-
-  /* Sources section */
-  .sources-details {
-    @apply mt-3 group;
-  }
-
-  .sources-summary {
+  .sources-summary{
     @apply list-none cursor-pointer select-none text-sm text-indigo-300 hover:text-indigo-200;
   }
 
-  .sources-summary-icon {
-    @apply size-4 transition-transform duration-200 group-open:rotate-180;
+  .sources-summary-icon{
+    @apply size-4 transition-transform duration-200;
   }
 
-  .sources-list {
-    @apply mt-3 space-y-2;
-  }
-
-  .source-item {
+  .source-item{
     @apply rounded-lg border border-white/10 bg-white/5 p-3;
   }
 
-  .source-header {
-    @apply flex items-start gap-2;
+  .source-badge{
+    @apply inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-transparent text-slate-300 border border-white/15
   }
 
-  .source-badge {
-    @apply inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-transparent text-slate-300 border border-white/15;
+  /* Document Table */
+
+  .all-docs-link{
+    @apply text-sm text-indigo-300 hover:underline hover:text-indigo-200;
   }
 
-  .source-text {
-    @apply text-sm text-slate-200 leading-6;
+  .table-row{
+    @apply border-b border-white/5 last:border-0 cursor-pointer transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:bg-white/10;
   }
 
-  .no-sources {
-    @apply text-slate-400 text-sm;
+  .small-document-item{
+    @apply block rounded-2xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/70
   }
-  
 }

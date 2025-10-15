@@ -89,10 +89,10 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
             </button>
 
             {showModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center">
-                    <div className="fixed inset-0 bg-black/60 p-6 rounded-2xl"> 
-                        <div className="relative z-10 w-full max-w-md rounded-2xl bg-white shadow-xl p-3">
-                            <h2 className="text-lg font-semibold text-gray-900">
+                <div className="modal-overlay">
+                    <div className="modal-bg"> 
+                        <div className="modal-card">
+                            <h2 className="change-title">
                                 Confirm {type === "account" ? "Account" : "All Documents"} Deletion
                             </h2>
                             <p className="mt-2 text-sm text-gray-600">
@@ -103,17 +103,17 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
                             </p>
 
                             {type === "account" ? (
-                                <label className="mt-4 block text-sm font-medium text-gray-700">
+                                <label className="change-label">
                                     Password
                                     <input 
                                         type="password" 
-                                        className="mt-1 w-full rounded-lg border border-gray-300 px-3 py-2 outline-none focus:ring" 
+                                        className="change-input" 
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         disabled={isLoading}
                                     />
                                 </label>
-                            ): (<label className="mt-4 flex items-start gap-2 text-sm text-gray-700">
+                            ): (<label className="checkbox-label">
                                     <input 
                                         type="checkbox" 
                                         className="mt-1 h-4 w-4" 
@@ -125,12 +125,12 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
                                 </label>)}
                             
                             {error && (
-                                <p className="mt-2 text-red-600 font-semibold">{error}</p>
+                                <p className="error-text">{error}</p>
                             )}
 
                             <div className="mt-6 flex items-center justify-end gap-3">
                                 <button 
-                                    className="rounded-lg px-4 py-2 text-gray-700 hover:bg-gray-100 cursor-pointer" 
+                                    className="close-cancel-button" 
                                     onClick={() => {
                                         setShowModal(false); 
                                         setPassword("");
@@ -142,7 +142,7 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
                                     Cancel
                                 </button>
                                 <button 
-                                    className="rounded-lg bg-red-600 px-4 py-2 cursor-pointer hover:bg-red-700 disabled:opacity-50" 
+                                    className="danger-button" 
                                     onClick={primaryAction}
                                     disabled={primaryDisabled}
                                 >

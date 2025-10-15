@@ -25,7 +25,7 @@ export default function DocumentTable({documentList} :  {documentList? : Documen
   if (!documentList.length) {
     return (
       <div className="mx-auto w-full max-w-6xl">
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6 text-center backdrop-blur">
+        <div className="content-box p-6 text-center">
           <h2 className="text-xl font-semibold tracking-tight">No recent documents</h2>
           <p className="mt-1 text-medium text-slate-300">
             Upload your first report to see it here.
@@ -39,12 +39,12 @@ export default function DocumentTable({documentList} :  {documentList? : Documen
     <div className="mx-auto w-full max-w-6xl">
       <div className="mb-3 flex items-center justify-between">
         <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">Your recent documents</h2>
-        <Link href="/all-documents" className="text-sm text-indigo-300 hover:underline hover:text-indigo-200">
+        <Link href="/all-documents" className="all-docs-link">
           View all
         </Link>
       </div>
 
-      <div className="max-w-2xl rounded-2xl border border-white/10 bg-white/5 p-3 sm:p-4 backdrop-blur">
+      <div className="max-w-2xl p-3 sm:p-4 content-box">
         <div className="hidden md:block">
           <table className="w-full table-fixed text-left text-medium">
             <thead className="text-slate-300">
@@ -63,7 +63,7 @@ export default function DocumentTable({documentList} :  {documentList? : Documen
                     tabIndex={0}
                     role="button"
                     aria-label={`Open ${doc.title}`}
-                    className="border-b border-white/5 last:border-0 cursor-pointer transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:bg-white/10"
+                    className="table-row"
                     onClick={() => router.push(`/document/${doc.id}`)}
                   >
                     <td className="px-3 py-3">
@@ -96,7 +96,7 @@ export default function DocumentTable({documentList} :  {documentList? : Documen
                 key={doc.id}
                 href={`/document/${doc.id}`}
                 aria-label={`Open ${doc.title}`}
-                className="block rounded-xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/70"
+                className="small-document-item"
               >
                 <div className="flex items-start justify-between gap-3">
                   <div>

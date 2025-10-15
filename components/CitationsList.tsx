@@ -34,21 +34,21 @@ const CitationsList = ({ items }: { items: CitationProps[] }) => {
         </span>
       </summary>
 
-      <ul className="citations-list">
+      <ul className="citations-list group-open:block">
         {items.map((c, i) => (
-          <li key={i} className="rounded-xl border border-white/10 bg-white/5 p-2">
+          <li key={i} className="citation-item">
             <div className="flex items-start gap-3">
-              <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-white/10 text-slate-200 border border-white/15">
+              <span className="citation-badge">
                 {c.targetIdx}
               </span>
               <p className="text-slate-200 leading-6">{c.targetText}</p>
             </div>
 
             <details className="mt-3 group">
-              <summary className="list-none cursor-pointer select-none text-sm text-indigo-300 hover:text-indigo-200">
+              <summary className="sources-summary">
                 <span className="inline-flex items-center gap-2">
                   <svg
-                    className="size-4 transition-transform duration-200 group-open:rotate-180"
+                    className="sources-summary-icon group-open:rotate-180"
                     viewBox="0 0 20 20"
                     fill="currentColor"
                     aria-hidden
@@ -66,9 +66,9 @@ const CitationsList = ({ items }: { items: CitationProps[] }) => {
               <div className="mt-3 space-y-2">
                 {c.sources.length ? (
                   c.sources.map((s) => (
-                    <div key={s.idx} className="rounded-lg border border-white/10 bg-white/5 p-3">
+                    <div key={s.idx} className="source-item">
                       <div className="flex items-start gap-2">
-                        <span className="inline-flex items-center rounded-full px-2 py-0.5 text-[10px] font-medium bg-transparent text-slate-300 border border-white/15">
+                        <span className="source-badge">
                           Sentence {s.idx}
                         </span>
                         <p className="text-sm text-slate-200 leading-6">{s.text}</p>
