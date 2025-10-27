@@ -414,4 +414,8 @@ body {
   .small-document-item{
     @apply block rounded-2xl border border-white/10 bg-white/5 p-3 transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/70
   }
+
+  .Toastify__toast-body {
+    @apply flex items-start gap-3 text-sm leading-5;
+  }
 }

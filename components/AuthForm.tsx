@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { signInUser, signUpUser } from '@/lib/user-actions/authActions';
 import Link from 'next/link';
 import { CreateUserInfo, SignInUserInfo } from '@/types/types';
+import { toast, ToastContainer } from 'react-toastify';
 
 const signInSchema = z.object({
     email: z.email("Invalid email.").min(1, "Email is required."),
@@ -44,9 +45,12 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
             const result = type === 'sign-up'
                 ? await signUpUser(userInfo as CreateUserInfo)
                 : await signInUser(userInfo as SignInUserInfo);
-
             if(result.success){
                 navigated = true;
+
+                if(type === "sign-up"){
+                    toast.success("You have successfuly signed up. Please verify your email to log in.");
+                }
                 router.prefetch("/");
                 router.push('/');
             }else{
@@ -71,7 +75,6 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
                 <h1 className='auth-header'>MedLens</h1>
                 <h2 className='auth-subtitle'>{type === 'sign-in' ? "Sign In" : "Sign Up"}</h2>
             </div>
-
 
             <form onSubmit={form.handleSubmit(onSubmit)} className='auth-form'>
                 {type === 'sign-up' && (
