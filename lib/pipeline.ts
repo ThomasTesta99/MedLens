@@ -200,7 +200,7 @@ export async function runOneJob(): Promise<Entity.Job> {
         return { processed: true, jobType: jobType, nextJobType: nextJob };
     } catch (error) {
         await db.update(jobs).set({ status: "error", error: String(error) }).where(eq(jobs.id, job.id));
-        await db.update(documents).set({error: String(error)}).where(eq(documents.id, payload.documentId!))
+        await db.update(documents).set({error: String(error), status: "Error",}).where(eq(documents.id, payload.documentId!));
         return { processed: false, jobType: jobType, error: String(error) };
     }
 }

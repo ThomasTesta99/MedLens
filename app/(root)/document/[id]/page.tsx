@@ -83,7 +83,9 @@ const page = async ({params}: {params : Promise<{id : string}>}) => {
   return (
     <div className="px-6 py-8">
       <DocumentHeader documentId={documentId} documentTitle={document.title}/>
-
+      {document.error && (
+        <div className="text-red-400 mb-4">There was an error uploading your document.</div>
+      )}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <div className="content-box p-6">
