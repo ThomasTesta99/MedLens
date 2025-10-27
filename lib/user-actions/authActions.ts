@@ -261,7 +261,7 @@ export const changeEmailRequest = async ({newEmail, url = '/'}: {newEmail : stri
             },
             headers: await headers(),
         })
-
+        console.log(result);
         if(!result.status){
             return {
                 success: false, 

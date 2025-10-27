@@ -29,7 +29,7 @@ export default function Providers() {
       closeButton={({ closeToast }) => (
         <button
           onClick={closeToast}
-          className="absolute top-2 right-2 text-slate-300 hover:text-white transition-colors"
+          className="absolute top-2 right-2 text-slate-300 hover:text-white transition-colors cursor-pointer"
           aria-label="Close"
         >
           ✕

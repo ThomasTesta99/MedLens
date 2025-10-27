@@ -4,6 +4,7 @@ import { deleteDocumentData, getUserDocuments } from '@/lib/user-actions/documen
 import { User } from '@/types/types'
 import { useRouter } from 'next/navigation'
 import React, { useState } from 'react'
+import { toast } from 'react-toastify'
 
 const DangerAction = ({user, type} : {user: User, type : "account" | "documents"}) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -44,6 +45,9 @@ const DangerAction = ({user, type} : {user: User, type : "account" | "documents"
                 }else{
                     console.log("Document Deleted")
                     setError(null);
+                    toast.success("All documents deleted.");
+                    setShowModal(false);
+                    router.refresh();
                 }
             }
             

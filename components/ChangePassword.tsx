@@ -2,6 +2,7 @@
 import { changePassword } from '@/lib/user-actions/authActions';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
+import { toast } from 'react-toastify';
 
 const ChangePassword = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -28,6 +29,9 @@ const ChangePassword = () => {
                 setOldPassword('');
                 setNewPassword('');
                 setConfirmNewPassword('');
+                toast.success("Password successfuly changed.",{
+                    autoClose: 5000
+                });
                 router.refresh();
             }
         } catch (error) {
