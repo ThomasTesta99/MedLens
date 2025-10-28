@@ -1,5 +1,6 @@
 import CitationsList from '@/components/CitationsList';
 import DocumentHeader from '@/components/DocumentHeader';
+import Retry from '@/components/Retry';
 import { splitIntoSentences } from '@/lib/sentence';
 import { getDocumentAndSummary } from '@/lib/user-actions/documents';
 import React from 'react';
@@ -84,7 +85,10 @@ const page = async ({params}: {params : Promise<{id : string}>}) => {
     <div className="px-6 py-8">
       <DocumentHeader documentId={documentId} documentTitle={document.title}/>
       {document.error && (
-        <div className="text-red-400 mb-4">There was an error uploading your document.</div>
+        <div className="mb-4 items-center flex flex-row gap-6">
+          <p className="text-red-400">There was an error processing your document</p>
+          <Retry documentId={documentId}/>
+        </div>
       )}
       <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">

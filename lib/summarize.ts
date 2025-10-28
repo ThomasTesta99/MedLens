@@ -1,4 +1,3 @@
-import { GeminiResponse } from "@/types/types";
 
 export type SummarizeOut = {
   summary: string;

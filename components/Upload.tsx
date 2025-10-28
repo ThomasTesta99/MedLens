@@ -102,6 +102,7 @@ const Upload = ({user}: {user: User}) => {
       })
 
       setStatus("Done");
+      
 
       router.push(`/document/${id}`);
 
