@@ -6,32 +6,36 @@ const ForgotPassword = () => {
     const [email, setEmail] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const [success, setSuccess] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        
+        setError(null);
         try {
             const userResult = await getUserByEmail({email});
 
             if(!userResult.user){
-                throw new Error("Failed to send link");
+                setError("Failed to send link");
             }
 
             const rateLimit = await checkRate(email, "password-reset");
             if(!rateLimit.valid){
-                throw new Error(rateLimit.message);
+                setError("Failed to send link. Please try again in a few minutes");
+                return;
             }
 
             const redirectTo = `${window.location.origin}/reset-password`;
             const result = await sendResetPasswordEmail({email, url: redirectTo});
             if(!result.success){
-                throw new Error(result.message);
+                setError(result.message);
             }else{
-                console.log("Reset link sent. Please check your email");
+                setSuccess(true);
             }
 
         } catch (error) {
-            console.log(error);
+            setError(error as string);
         }finally{
             setIsSubmitting(false);
         }
@@ -51,6 +55,14 @@ const ForgotPassword = () => {
                     required
                     placeholder='Email'
                 />
+
+                {success && (
+                    <p className="text-green-400 mt-2 text-sm">Reset link sent. Please check your email</p>
+                )}
+
+                {error && (
+                    <p className="text-red-400 mt-2 text-sm">{error}</p>
+                )}
 
                 <button 
                     className="auth-submit"

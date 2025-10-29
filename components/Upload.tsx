@@ -1,6 +1,6 @@
 'use client'
 
-import { LABELS, UNKNOWN_LABEL } from '@/constants';
+import { LABELS} from '@/constants';
 import { Job, JobType } from '@/lib/entityUtils';
 import { User } from '@/types/types';
 import { useRouter } from 'next/navigation';
@@ -102,13 +102,12 @@ const Upload = ({user}: {user: User}) => {
       })
 
       setStatus("Done");
-      
+
 
       router.push(`/document/${id}`);
 
     } catch (err) {
-      console.error(err);
-      setError("Unexpected error occurred:" + error as string);
+      setError("Unexpected error occurred:" + err as string);
       setStatus(null);
     }finally{
       setIsLoading(false);

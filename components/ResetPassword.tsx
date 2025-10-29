@@ -2,6 +2,7 @@
 import { resetUserPassword } from '@/lib/user-actions/authActions';
 import { useRouter, useSearchParams } from 'next/navigation';
 import React, { useEffect, useState } from 'react'
+import { toast } from 'react-toastify';
 
 const ResetPassword = () => {
     const searchParams = useSearchParams();
@@ -12,6 +13,8 @@ const ResetPassword = () => {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [passwordsMatch, setPasswordsMatch] = useState(true);
+
+    const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         setPasswordsMatch(password === confirmPassword || confirmPassword === '');
@@ -27,9 +30,9 @@ const ResetPassword = () => {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
+        setError(null);
         if(!token){
-            console.log("Missing token");
+            setError("Failed to reset password.");
             return;
         }
 
@@ -41,11 +44,13 @@ const ResetPassword = () => {
             })
 
             if(result.success){
-                console.log("Successfully reset password.");
+                toast.success("Successfully reset password.", {
+                    autoClose: 2000,
+                });
                 setTimeout(() => router.push("/sign-in"), 2000);
             }
         } catch (error) {
-            console.log(error);
+            setError(error as string);
         }finally{
             setIsSubmitting(false);
         }
@@ -78,6 +83,11 @@ const ResetPassword = () => {
                 {passwordsMatch && confirmPassword && (
                     <p className="text-green-500 text-sm mt-1">Passwords match</p>
                 )}
+
+                {error && (
+                    <p className="text-red-400 text-sm mt-2">{error}</p>
+                )}
+
                 <button
                     type="submit"
                     disabled={isSubmitting || password != confirmPassword}

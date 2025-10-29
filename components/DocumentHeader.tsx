@@ -6,11 +6,12 @@ import React, { useState } from 'react'
 
 const DocumentHeader = ({documentId, documentTitle}: {documentId: string, documentTitle: string | null}) => {
     const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
     const router = useRouter();
 
     const handleDelete = async () => {
         setIsLoading(true);
-
+        setError(null);
         try {
             if(!confirm("Are you sure you want to delete this document?")) return;
             const result = await deleteDocumentData({documentId});
@@ -21,7 +22,7 @@ const DocumentHeader = ({documentId, documentTitle}: {documentId: string, docume
                 router.push("/");
             }
         } catch (error) {
-            console.log(error);
+            setError(error as string);
         }finally{
             setIsLoading(false);
         }
@@ -39,10 +40,13 @@ const DocumentHeader = ({documentId, documentTitle}: {documentId: string, docume
                     <p>Homepage</p>
                 </button>
             </div>
-            <div className='flex flex row items-center'>
+            <div className='flex flex-col items-center space-y-4'>
                 <button className='btn-ghost text-red-400' onClick={handleDelete} disabled={isLoading}>
                     {isLoading ? "Deleting Document..." : "Delete Document"}
                 </button>
+                {error && (
+                    <p className="text-red-700">{error}</p>
+                )}
             </div>
         </header>
     )
