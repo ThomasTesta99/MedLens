@@ -4,6 +4,7 @@ import { Job } from '@/types/types';
 import { notFound, redirect } from 'next/navigation';
 import React from 'react'
 import { formatDate } from '../all-documents/page';
+import JobErrorList from '@/components/JobErrorList';
 
 const page = async () => {
     const session = await getUserSession();
@@ -23,23 +24,11 @@ const page = async () => {
 
   return (
     <main className="p-6">
-        <h1 className="text-2xl font-semibold mb-4">Failed Jobs</h1>
+
         {jobList.length === 0 ? (
             <p>No Failed Jobs</p>
         ): (
-            <ul className="space-y-3">
-                {jobList.map((j) => (
-                    <li className="rounded-2xl border p-3 text-sm" key={j.id}>
-                        <div className="font-mono">id: {j.id}</div>
-                        <div>type: {j.type}</div>
-                        <div>status: {j.status}</div>
-                        <div className="truncate">error: {j.error ?? "—"}</div>
-                        <div className="text-xs opacity-70">
-                            created: {formatDate(j.createdAt)} | updated: {formatDate(j.updatedAt)}</div>
-                            
-                    </li>
-                ))}
-            </ul>
+            <JobErrorList jobErrorList={jobList}/>
         )}
     </main>
   )

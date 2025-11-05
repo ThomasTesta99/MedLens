@@ -1,7 +1,7 @@
 import { db } from "@/database/drizzle";
 import { getUserSession } from "./user-actions/authActions"
 import { jobs } from "@/database/schema";
-import { eq } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 
 export const getAllJobErrors = async () => {
     try {
@@ -14,7 +14,7 @@ export const getAllJobErrors = async () => {
             }
         }
 
-        const jobList = await db.select().from(jobs).where(eq(jobs.status, "error"));
+        const jobList = await db.select().from(jobs).where(eq(jobs.status, "error")).orderBy(desc(jobs.createdAt));
 
         return{
             success: true, 
