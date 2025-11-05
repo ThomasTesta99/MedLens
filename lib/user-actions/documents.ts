@@ -20,7 +20,6 @@ export const getUserDocuments = async ({userId} : {userId : string}) => {
             documents: docs,
         }
     } catch (error) {
-        console.log(error);
         return{
             success: false,
             message: "Error getting user documents.",
@@ -41,7 +40,6 @@ export const uploadDocument = async ({document} : {document: UploadDocument}) =>
             id: doc.id,
         }
     } catch (error) {
-        console.log(error);
         return {
             success: false,
             message: "Error uploading document",
@@ -60,10 +58,10 @@ export const uploadDocumentTexts = async ({documentText} : {documentText : Uploa
             message: "Successfully uploaded document texts",
         }
     } catch (error) {
-        console.log(error);
         return {
             success: false, 
             message: "Error uploading document texts",
+            error: error,
         }
     }
 }

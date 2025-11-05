@@ -70,4 +70,14 @@ interface GeminiResponse {
   candidates?: GeminiCandidate[];
 }
 
+export interface Job {
+  id: string;
+  type: string;
+  payload: string;
+  status: string; 
+  error: string;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
 export type Action = 'password-reset' | 'verify-email' | 'change-email' | "must-verify-email";

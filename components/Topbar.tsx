@@ -17,7 +17,7 @@ const Topbar = ({user} : UserProps) => {
     await signOutUser();
     router.push('/sign-in');
   }
-
+  const isAdminActive = pathName === "/admin" || pathName.startsWith("/admin");
   return (
     <>
       <div className="topbar">
@@ -64,6 +64,16 @@ const Topbar = ({user} : UserProps) => {
                 </li>
               )
             })}
+            {user && user.role === "admin" && (
+              <Link 
+                href={"/admin"}
+                onClick={() => setMenuOpen(false)}
+                className={`menu-link ${isAdminActive ? 'menu-link--active' : ''}`}
+              >
+                <Image src="/icons/admin-icon.svg" alt="admin" width={20} height={20} className="menu-link-icon" />
+                <span className="menu-link-label">Admin</span>
+              </Link>
+            )}
           </ul>
         </nav>
 

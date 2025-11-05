@@ -14,7 +14,7 @@ export async function POST(
     
     const document = await db.select().from(documents).where(eq(documents.id, documentId)).limit(1);
     
-    if(!document){
+    if(!document[0]){
         return NextResponse.json({error:"Document not found"}, {status: 404});
     }
     
