@@ -1,16 +1,46 @@
 'use client'
 import { formatDate } from '@/app/(root)/all-documents/page';
 import { Job } from '@/types/types'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 
 const JobErrorList = ({jobErrorList} : {jobErrorList : Job[]}) => {
     const [jobList, setJobList] = useState(jobErrorList || []);
     const [deletingJobs, setDeletingJobs] = useState(false);
+    const [error, setError] = useState<string | null>(null);
+    const [selected, setSelected] = useState<Set<string>>(new Set());
+    const [deleting, setDeleting] = useState(false);
 
     useEffect(() => {
-        const newJobList = jobErrorList ?? [];
-        setJobList(newJobList);
-    }, [jobErrorList])
+        if(!deletingJobs) setJobList(jobErrorList ?? []);
+    }, [jobErrorList, deletingJobs]);
+
+    const allIds = useMemo(() => jobList.map((j) => j.id), [jobList]);
+    const allSelected = selected.size > 0 && selected.size === allIds.length;
+
+    const toggleDelete = () => {
+        setDeletingJobs((v) => {
+            const next = v;
+            if(!next) setSelected(new Set());
+            return next;
+        });
+        setError(null);
+    }
+
+    const toggleOne = (id : string) => {
+        setSelected((prev) => {
+            const next = new Set(prev);
+            next.has(id) ? next.delete(id) : next.add(id);
+            return next;
+        })
+    };
+
+    const toggleAll = () => {
+        setSelected((prev) => {
+            if(prev.size === allIds.length) return new Set();
+            return new Set(allIds);
+        })
+    }
+
     return (
         <div>
             <div className="flex flex-row justify-between items-center mb-4">
@@ -18,27 +48,43 @@ const JobErrorList = ({jobErrorList} : {jobErrorList : Job[]}) => {
                 <div className='flex items-center gap-2'>
                     {deletingJobs && (
                         <div className='space-x-2'>
-                            <button className="change-button cursor-pointer" onClick={() => setDeletingJobs(false)}>Close</button>
-                            <button className="change-button cursor-pointer">Select All</button>
+                            <button className="change-button cursor-pointer" onClick={toggleDelete}>Close</button>
+                            <button 
+                                className="change-button cursor-pointer"
+                                disabled = {jobList.length === 0}
+                                onClick={toggleAll}
+                            >
+                                {allSelected ? "Clear All" : "Select All"}
+                            </button>
+                            <button className="change-button text-red-400">
+                                {deleting ? "Deleting..." : `Delete ${selected.size || ""} ${selected.size ? "selected" : ""}`.trim()}
+                            </button>
                         </div>
 
                     )}
-                    <button 
-                        className="change-button text-red-400"
-                        onClick={() => {setDeletingJobs(true)}}
-                    >
-                        {deletingJobs ? "Select Jobs to Delete" : "Delete Jobs"}
-                    </button>
+                    {!deletingJobs && (
+                        <button 
+                            className="change-button text-red-400"
+                            onClick={() => {setDeletingJobs(true)}}
+                        >
+                            {deletingJobs ? "Select Jobs to Delete" : "Delete Jobs"}
+                        </button>
+                    )}
                 </div>
             </div>
+
+            {error && <p className="mb-3 text-sm text-red-400">{error}</p>}
+
             <ul className="space-y-3">
                 {jobList.map((j) => {
                     return (
-                        <li className="rounded-2xl border p-3 text-sm flex flex-row gap-4" key={j.id}>
+                        <li className="rounded-2xl border p-3 text-sm flex flex-row gap-4 items-start" key={j.id}>
                             {deletingJobs && (
                                 <input 
                                     type='checkbox'
                                     className='mt-1'
+                                    checked={selected.has(j.id)}
+                                    onChange={() => toggleOne(j.id)}
                                 />
                             )}
                             <div className="flex flex-col">

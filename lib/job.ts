@@ -1,7 +1,7 @@
 import { db } from "@/database/drizzle";
 import { getUserSession } from "./user-actions/authActions"
 import { jobs } from "@/database/schema";
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, inArray } from "drizzle-orm";
 
 export const getAllJobErrors = async () => {
     try {
@@ -25,6 +25,23 @@ export const getAllJobErrors = async () => {
         return{
             success: false, 
             message: "Error getting job errors", 
+            error: error, 
+        }
+    }
+}
+
+export const deleteJobs = async ({jobList} : {jobList : string[]}) => {
+    try {
+        await db.delete(jobs).where(inArray(jobs.id, jobList));
+
+        return {
+            success: true, 
+            message: "Jobs successfully deleted", 
+        }
+    } catch (error) {
+        return {
+            success: true, 
+            message: "There was an error deleteing jobs", 
             error: error, 
         }
     }
