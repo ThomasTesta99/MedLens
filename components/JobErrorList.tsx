@@ -19,7 +19,7 @@ const JobErrorList = ({jobErrorList} : {jobErrorList : Job[]}) => {
 
     const toggleDelete = () => {
         setDeletingJobs((v) => {
-            const next = v;
+            const next = !v;
             if(!next) setSelected(new Set());
             return next;
         });
@@ -29,7 +29,11 @@ const JobErrorList = ({jobErrorList} : {jobErrorList : Job[]}) => {
     const toggleOne = (id : string) => {
         setSelected((prev) => {
             const next = new Set(prev);
-            next.has(id) ? next.delete(id) : next.add(id);
+            if(next.has(id)){
+                next.delete(id);
+            }else{
+                next.add(id);
+            }
             return next;
         })
     };
@@ -39,6 +43,11 @@ const JobErrorList = ({jobErrorList} : {jobErrorList : Job[]}) => {
             if(prev.size === allIds.length) return new Set();
             return new Set(allIds);
         })
+    }
+
+
+    const handleDelete = () => {
+        console.log(selected);
     }
 
     return (
@@ -56,7 +65,7 @@ const JobErrorList = ({jobErrorList} : {jobErrorList : Job[]}) => {
                             >
                                 {allSelected ? "Clear All" : "Select All"}
                             </button>
-                            <button className="change-button text-red-400">
+                            <button className="change-button text-red-400" onClick={handleDelete}>
                                 {deleting ? "Deleting..." : `Delete ${selected.size || ""} ${selected.size ? "selected" : ""}`.trim()}
                             </button>
                         </div>
