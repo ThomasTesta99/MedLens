@@ -2,6 +2,7 @@
 import { formatDate } from '@/app/(root)/all-documents/page';
 import { deleteJobs } from '@/lib/job';
 import { Job } from '@/types/types'
+import { useRouter } from 'next/navigation';
 import React, { useEffect, useMemo, useState } from 'react'
 import { toast } from 'react-toastify';
 
@@ -19,6 +20,8 @@ const JobErrorList = ({jobErrorList} : {jobErrorList : Job[]}) => {
 
     const allIds = useMemo(() => jobList.map((j) => j.id), [jobList]);
     const allSelected = selected.size > 0 && selected.size === allIds.length;
+
+    const router = useRouter();
 
 
     const handleCopy = async (id: string) => {
@@ -62,26 +65,28 @@ const JobErrorList = ({jobErrorList} : {jobErrorList : Job[]}) => {
 
 
     const handleDelete = async () => {
-        // if(selected.size === 0) return;
-        // setDeleting(true);
-        // setError(null);
-        // try {
-        //     const ids = Array.from(selected);
-        //     const result = await deleteJobs({jobList : ids});
-        //     if(result.success){
-        //         toast.success(`${selected.size} job(s) deleted successfully.`);
-        //         const deleted = new Set<string>(Array.from(selected));
-        //         setJobList((list) => list.filter((j) => !deleted.has(j.id)));
-        //         setSelected(new Set());
-        //         setDeletingJobs(false);
-        //     }else{
-        //         toast.error("There was an error deleting selected jobs.");
-        //     }
-        // } catch (error) {
-        //     setError(error as string);
-        // }finally{
-        //     setDeleting(false);
-        // }
+        if(selected.size === 0) return;
+        setDeleting(true);
+        setError(null);
+        try {
+            const ids = Array.from(selected);
+            const result = await deleteJobs({jobList : ids});
+            if(result.success){
+                toast.success(`${selected.size} job(s) deleted successfully.`);
+                const deleted = new Set<string>(Array.from(selected));
+                setJobList((list) => list.filter((j) => !deleted.has(j.id)));
+                setSelected(new Set());
+                setDeletingJobs(false);
+                router.refresh();
+            }else{
+                toast.error("There was an error deleting selected jobs.");
+                setError(result.error as string);
+            }
+        } catch (error) {
+            setError(error as string);
+        }finally{
+            setDeleting(false);
+        }
     }
 
     return (

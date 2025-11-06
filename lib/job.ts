@@ -1,3 +1,4 @@
+'use server'
 import { db } from "@/database/drizzle";
 import { getUserSession } from "./user-actions/authActions"
 import { jobs } from "@/database/schema";
