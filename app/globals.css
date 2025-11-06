@@ -418,4 +418,29 @@ body {
   .Toastify__toast-body {
     @apply flex items-start gap-3 text-sm leading-5;
   }
+
+  /* Job Error List */
+
+  .list-container{
+    @apply flex flex-row justify-between items-center mb-4;
+  }
+
+  .list-item{
+    @apply rounded-2xl border p-4 text-sm transition border-white/10 hover:border-white hover:bg-white/[0.02];
+  }
+
+  .list-checkbox{
+    @apply mt-1 h-5 w-5 rounded border border-white/20
+                                        accent-teal-400
+                                        focus-visible:ring-2 focus-visible:ring-teal-400 focus-visible:ring-offset-2 focus-visible:ring-offset-black;
+  }
+
+  .list-job-status{
+    @apply inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium ring-1 bg-red-500/15 text-red-300 ring-red-500/30;
+  }
+
+  .list-job-error{
+    @apply mt-2 max-h-40 overflow-auto whitespace-pre-wrap rounded-lg bg-red-950/40 p-3 text-xs text-red-200;
+  }
+
 }

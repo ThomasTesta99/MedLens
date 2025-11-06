@@ -30,7 +30,7 @@ export const getAllJobErrors = async () => {
     }
 }
 
-export const deleteJobs = async ({jobList} : {jobList : string[]}) => {
+export const deleteJobs = async ({jobList} : {jobList : string[] | []}) => {
     try {
         await db.delete(jobs).where(inArray(jobs.id, jobList));
 
