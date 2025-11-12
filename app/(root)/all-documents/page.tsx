@@ -58,7 +58,7 @@ const page = async () => {
           </p>
         </header>
 
-        {/* Grid of cards */}
+
         <section className="all-docs-grid">
           {documents.map((doc) => (
             <DocumentCard key={doc.id} doc={doc} />
@@ -91,7 +91,6 @@ function DocumentCard({ doc }: { doc: Doc }) {
         {doc.ingestMethod && <span>Ingest: {doc.ingestMethod}</span>}
       </div>
 
-      {/* Error hint */}
       {doc.error ? (
         <p className="mt-3 text-sm text-rose-400 line-clamp-2">
           Error: {doc.error}

@@ -2,7 +2,6 @@
 
 import { LABELS} from '@/constants';
 import { Job, JobType } from '@/lib/entityUtils';
-import { User } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import React, { type FormEvent, useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -32,7 +31,7 @@ export async function runAllJobs(
   }
 }
 
-const Upload = ({user}: {user: User}) => {
+const Upload = () => {
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<string | null>(null);  
   const [isLoading, setIsLoading] = useState(false);

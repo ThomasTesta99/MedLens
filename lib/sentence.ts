@@ -8,7 +8,6 @@ export function splitIntoSentences(text: string): string[] {
 }
 
 export function toNumberedLines(summary: string): { numbered: string; sentences: string[] } {
-  // naive sentence split is fine for the BART output
   const sentences = summary
     .replace(/\s+/g, " ")
     .split(/(?<=[.!?])\s+(?=[A-Z(0-9])/)

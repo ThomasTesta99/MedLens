@@ -3,7 +3,6 @@ import { getUserSession } from '@/lib/user-actions/authActions'
 import { Job } from '@/types/types';
 import { notFound, redirect } from 'next/navigation';
 import React from 'react'
-import { formatDate } from '../all-documents/page';
 import JobErrorList from '@/components/JobErrorList';
 
 const page = async () => {

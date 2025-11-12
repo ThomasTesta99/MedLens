@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { signInUser, signUpUser } from '@/lib/user-actions/authActions';
 import Link from 'next/link';
 import { CreateUserInfo, SignInUserInfo } from '@/types/types';
-import { toast, ToastContainer } from 'react-toastify';
+import { toast } from 'react-toastify';
 
 const signInSchema = z.object({
     email: z.email("Invalid email.").min(1, "Email is required."),

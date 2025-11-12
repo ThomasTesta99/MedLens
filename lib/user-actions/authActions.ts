@@ -1,7 +1,7 @@
 'use server'
 import { headers } from "next/headers"
 import { auth } from "../auth"
-import { Action, CreateUserInfo, SignInUserInfo, User } from "@/types/types"
+import { Action, CreateUserInfo, SignInUserInfo } from "@/types/types"
 import { validateWithArcjet } from "../arcjet"
 import { db } from "@/database/drizzle"
 import { users } from "@/database/schema"
@@ -218,7 +218,7 @@ export const getUserByEmail = async ({email} : {email : string}) => {
     } catch (error) {
         return {
         success: false,
-        message: 'Server error while fetching user',
+        message: 'Server error while fetching user: ' +  error as string,
         };
     }
 }

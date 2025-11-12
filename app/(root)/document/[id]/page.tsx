@@ -13,7 +13,7 @@ type Entity = {
   start: number;
   end: number;
   score: string | null;
-  createdAt: Date | null; // <-- allow Date here
+  createdAt: Date | null; 
 };
 
  type DocSentence = { idx: number; text: string };
