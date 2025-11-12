@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useState } from 'react'
+import logo from '@/public/icons/logo.png'
 
 const Topbar = ({user} : UserProps) => {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -21,7 +22,12 @@ const Topbar = ({user} : UserProps) => {
   return (
     <>
       <div className="topbar">
-        <Link href="/"><h1>MedLens</h1></Link>
+        <Link href="/" className="flex flex-row gap-2">
+          <Image src={logo} alt='logo' width={36} height={32} className='invert'/>
+        
+          <h1>MedLens</h1>
+        </Link>
+      
         <button onClick={toggleMenu} className="topbar-menu-btn">
           <Image src="/icons/menu.svg" width={24} height={24} alt="menu" className="icon-invert" />
         </button>

@@ -8,6 +8,8 @@ import { signInUser, signUpUser } from '@/lib/user-actions/authActions';
 import Link from 'next/link';
 import { CreateUserInfo, SignInUserInfo } from '@/types/types';
 import { toast } from 'react-toastify';
+import Image from 'next/image';
+import logo from '@/public/icons/logo.png'
 
 const signInSchema = z.object({
     email: z.email("Invalid email.").min(1, "Email is required."),
@@ -72,7 +74,10 @@ const AuthForm = ({type} : {type : "sign-in" | "sign-up"}) => {
     return (
         <div className='auth-card'>
             <div className='mb-6 text-center'>
-                <h1 className='auth-header'>MedLens</h1>
+                <div className='flex flex-row gap-2 items-center justify-center'>
+                    <Image src={logo} alt='logo' width={40} height={40} className='invert'/>
+                    <h1 className='auth-header'>MedLens</h1>
+                </div>
                 <h2 className='auth-subtitle'>{type === 'sign-in' ? "Sign In" : "Sign Up"}</h2>
             </div>
 
