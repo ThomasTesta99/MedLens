@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { plexSans, plexMono } from "@/fonts";
+import { robotoMono } from "@/fonts";
 import Providers from "@/components/Providers";
 
 export const metadata: Metadata = {
@@ -15,7 +15,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${plexSans.variable} ${plexMono.variable} font-sans antialiased min-h-dvh bg-fixed bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white`}>
+      <body className={`${robotoMono.className}  font-sans antialiased min-h-dvh bg-fixed bg-gradient-to-br from-slate-950 via-slate-900 to-black text-white`}>
         <Providers />
         {children}
       </body>
