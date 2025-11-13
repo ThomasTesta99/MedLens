@@ -2,6 +2,7 @@
 
 import { LABELS} from '@/constants';
 import { Job, JobType } from '@/lib/entityUtils';
+import { convertPdfToImage } from '@/lib/pdf2image';
 import { useRouter } from 'next/navigation';
 import React, { type FormEvent, useCallback, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -74,15 +75,27 @@ const Upload = () => {
     try {
       setStatus("Uploading file...");
       
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
+      let res = await fetch("/api/upload", { method: "POST", body: formData });
 
-      if (!res.ok) {
-        const json = await res.json();
-        setError(json.error || "Upload failed.");
+      if (!res.ok && file.type === "application/pdf") {
+        const imageFile = await convertPdfToImage(file);
+        if(!imageFile.file) {
+            setError("Error: Failed to convert PDF to image");
+            console.log(imageFile?.error);
+            return;
+        }
+        formData.delete("file");
+        formData.append("file", imageFile.file);
+        res = await fetch("/api/upload", { method: "POST", body: formData });
+
+      }
+      
+      if(!res.ok){
+        const resJson = await res.json();
+        setError(resJson.error || "Upload failed.");
         setStatus(null);
         return;
       }
-
       setStatus("File Uploaded. Reading document...");
       
       const json = await res.json();

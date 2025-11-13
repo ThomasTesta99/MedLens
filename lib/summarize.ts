@@ -100,7 +100,7 @@ export async function summarizeAndSuggest({
     );
 
     if (!res.ok) {
-        throw new Error(`HF API error: ${res.status} ${await res.text()}`);
+        throw new Error(`${await res.text()}`);
     }
 
     const data = await res.json();

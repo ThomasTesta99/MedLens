@@ -3,6 +3,7 @@ import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
 import { runAllJobs } from './Upload';
 import { LABELS } from '@/constants';
+import { ClipLoader } from 'react-spinners';
 
 const Retry = ({documentId}: {documentId: string}) => {
     const [retrying, setRetrying] = useState(false);
@@ -32,8 +33,9 @@ const Retry = ({documentId}: {documentId: string}) => {
                 }
             });
 
-            setMessage("Done!");
+            setMessage("Done.");
             router.refresh();
+            setMessage("")
         } catch (error) {
             setMessage(error as string);
         }finally{
@@ -43,9 +45,12 @@ const Retry = ({documentId}: {documentId: string}) => {
 
     return (
         <div className=''>
-            <button className="btn-ghost" onClick={onRetry} disabled={retrying}>
-                {retrying ? "Retrying..." : "Retry Uploading"}
-            </button>
+            <div className="flex flex-row gap-2">
+                <button className="btn-ghost" onClick={onRetry} disabled={retrying}>
+                    {retrying ? "Retrying..." : "Retry Uploading"}
+                </button>
+                {retrying ? (<ClipLoader color='white'/> ) : <></>}
+            </div>
             {message && <p className='mt-2 text-sm text-slate-300'>{message}</p>}
         </div>
     )

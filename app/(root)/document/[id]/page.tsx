@@ -4,6 +4,7 @@ import Retry from '@/components/Retry';
 import { splitIntoSentences } from '@/lib/sentence';
 import { getDocumentAndSummary } from '@/lib/user-actions/documents';
 import React from 'react';
+import { getErrorMessage } from '../../all-documents/page';
 
 type Entity = {
   id: string;
@@ -86,7 +87,7 @@ const page = async ({params}: {params : Promise<{id : string}>}) => {
       <DocumentHeader documentId={documentId} documentTitle={document.title}/>
       {document.error && (
         <div className="mb-4 items-center flex flex-row gap-6">
-          <p className="text-red-400">There was an error processing your document</p>
+          <p className="text-red-400">There was an error processing your document: <br /> {getErrorMessage(document.error)}</p>
           <Retry documentId={documentId}/>
         </div>
       )}
@@ -110,7 +111,7 @@ const page = async ({params}: {params : Promise<{id : string}>}) => {
                 ))}
               </ul>
             ) : (
-              <p className="text-slate-300">No Questions Generated</p>
+              <p className="text-slate-300">No Questions Generated.</p>
             )}
           </div>
 

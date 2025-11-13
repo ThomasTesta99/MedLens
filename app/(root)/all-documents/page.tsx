@@ -93,7 +93,7 @@ function DocumentCard({ doc }: { doc: Doc }) {
 
       {doc.error ? (
         <p className="mt-3 text-sm text-rose-400 line-clamp-2">
-          Error: {doc.error}
+          Error: {getErrorMessage(doc.error)}
         </p>
       ) : null}
 
@@ -138,5 +138,25 @@ export function formatDate(d: Date | string) {
         day: "numeric",
     });
 }
+
+export function getErrorMessage(error: string | null) {
+  if (!error) return null;
+
+  try {
+    const jsonStart = error.indexOf('{');
+    if (jsonStart === -1) return error;
+
+    const parsed = JSON.parse(error.slice(jsonStart));
+
+    if (parsed?.error?.message) return parsed.error.message;
+    if (parsed?.message) return parsed.message;
+
+    return error;
+  } catch {
+    // Fallback if parsing fails
+    return error;
+  }
+}
+
 
 export default page
