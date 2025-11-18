@@ -15,8 +15,6 @@ export async function ocrImageExtract(buffer: Buffer){
     undefined,       
     {
       corePath: "/tesseract/tesseract-core-simd.js",
-      langPath: "/tesseract/",
-      workerPath: "/tesseract/worker.js",
       workerBlobURL: false, 
     }
   );
