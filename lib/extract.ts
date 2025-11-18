@@ -10,7 +10,16 @@ export async function extractPdfText(buffer: Buffer){
 }
 
 export async function ocrImageExtract(buffer: Buffer){
-  const worker = await createWorker("eng");
+  const worker = await createWorker(
+    "eng",           
+    undefined,       
+    {
+      corePath: "/tesseract/tesseract-core-simd.js",
+      langPath: "/tesseract/",
+      workerPath: "/tesseract/worker.js",
+      workerBlobURL: false, 
+    }
+  );
  
   const {data} = await worker.recognize(buffer);
   await worker.terminate();
