@@ -5,10 +5,7 @@ const nextConfig: NextConfig = {
   typescript:{
     ignoreBuildErrors: true, 
   },
-  experimental: {
-    serverComponentsExternalPackages: ['pdf-parse', 'tesseract.js'],
-    
-  },
+  serverExternalPackages: ["pdf-parse", "tesseract.js"],
 
 };
 
