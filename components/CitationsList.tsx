@@ -14,9 +14,12 @@ const CitationsList = ({ items }: { items: CitationProps[] }) => {
   return (
     <details className="group citation-container">
       <summary className="citation-summary">
-        <p className="citation-summary-text">
-          Citations show which original report sentences support each summary sentence.
-        </p>
+        <div className="flex flex-col gap-1.5 group-open:hidden">
+          <p className="citation-summary-text">
+            Citations show which original report sentences support each summary sentence.
+          </p>
+          <p className="text-sm text-gray-400">Please note that text extracted from PDFs or images may sometimes appear distorted or missing spaces due to how the original file was formatted.</p>
+        </div>
         <span className="citation-summary-count">
           <span className="text-sm">({items.length})</span>
           <svg
@@ -71,7 +74,7 @@ const CitationsList = ({ items }: { items: CitationProps[] }) => {
                         <span className="source-badge">
                           Sentence {s.idx}
                         </span>
-                        <p className="text-sm text-slate-200 leading-6">{s.text}</p>
+                        <p className="text-sm text-slate-200 leading-6 break-all">{s.text}</p>
                       </div>
                     </div>
                   ))

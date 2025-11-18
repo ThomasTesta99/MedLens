@@ -362,7 +362,7 @@ body {
   }
 
   .citation-summary-text{
-    @apply text-slate-200 group-open:hidden;
+    @apply text-slate-200 ;
   }
 
   .citation-summary-count{
