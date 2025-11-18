@@ -51,11 +51,19 @@ const page = async () => {
 
     return (
       <main className="px-6 py-8">
-        <header className="mb-6">
-          <h1 className="text-3xl font-semibold tracking-tight">All documents</h1>
-          <p className="mt-1 text-sm text-slate-300">
-            Browse your uploaded files, see processing status, and jump into details.
-          </p>
+        <header className="mb-6 flex flex-row justify-between items-center">
+          <div>
+            <h1 className="text-3xl font-semibold tracking-tight">All documents</h1>
+            <p className="mt-1 text-sm text-slate-300">
+              Browse your uploaded files, see processing status, and jump into details.
+            </p>
+          </div>
+          <Link
+            href="/upload"
+            className="inline-flex items-center rounded-xl bg-indigo-500 px-4 py-2 text-sm font-medium hover:bg-indigo-400"
+          >
+            Upload a document
+          </Link>
         </header>
 
 
@@ -153,7 +161,6 @@ export function getErrorMessage(error: string | null) {
 
     return error;
   } catch {
-    // Fallback if parsing fails
     return error;
   }
 }

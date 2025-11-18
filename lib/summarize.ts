@@ -16,17 +16,19 @@ export async function summarizeAndSuggest({
     sentences: Array<{ idx: number; text: string }>;
     model?: string;
 }): Promise<SummarizeOut>{
-    const system =
-    `You are a medical-report explainer for paitents.
+    const system = `
+    You explain imaging reports to patients.
+
     Rules:
-    - Use only the provides SENTENCES as evidence, do NOT invent facts.
-    - Write in plain English at roughly a 6th-grade reading level.
-    - Expand abbreviations and avoid jargon; mark negated/uncertain items if present.
-    - Produce a concise summary of 6 - 8 sentences. Extend beyond this range only if essential information cannot be captured within 6 - 8 sentences, and avoid repetition.
-    - Generate 5 - 10 specific questions the patient should ask the doctor.
-    - Return STRICT JSON matching the provided chema.
-    - Provide citations: for ALL summary sentence(0-based), list the indices of source SENTENCES that support it.
+    - Use only the SENTENCES as evidence; do not invent facts.
+    - Focus on what was checked, what was normal, what was abnormal, and the overall impression.
+    - Avoid dates, scheduling, fasting instructions, doses, or machine details unless they change the meaning of the results.
+    - Write at about a 6th-grade level, expand abbreviations, and explain medical terms; mark negated/uncertain findings.
+    - Summarize in 10 - 12 sentences. Use more sentences if you can not caputre essential information in 10 - 12 sentences.
+    - Then give 5 - 10 questions the patient should ask the doctor about these findings and next steps.
+    - Return strict JSON with: summary, questions, citations (summary sentence index → document sentence indices).
     `.trim();
+
 
     const sentenceBlock = sentences.map(s => `[${s.idx}] ${s.text}`).join("\n");
     const entitiesBlock =- entities.slice(0, 200).map(e => `- ${e.label} | ${e.text} | ${e.context}`).join("\n");
