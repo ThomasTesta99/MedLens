@@ -3,6 +3,7 @@ import { deleteDocumentData } from '@/lib/user-actions/documents';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import React, { useState } from 'react'
+import { toast } from 'react-toastify';
 
 const DocumentHeader = ({documentId, documentTitle}: {documentId: string, documentTitle: string | null}) => {
     const [isLoading, setIsLoading] = useState(false);
@@ -17,8 +18,9 @@ const DocumentHeader = ({documentId, documentTitle}: {documentId: string, docume
             const result = await deleteDocumentData({documentId});
             
             if(!result.success){
-                console.log(result.message);
+                toast.error("There was an error deleting the document.");
             }else{
+                toast.success("Document deleted.");
                 router.push("/");
             }
         } catch (error) {
