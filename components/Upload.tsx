@@ -81,7 +81,7 @@ const Upload = () => {
       }
 
       if (file.type.startsWith('image/')) {
-        setStatus('File Uploaded. Reading document...');
+        setStatus('Uploading file...');
 
         const text = await ocrImageFile(file);
         if (!text) {
@@ -151,8 +151,6 @@ const Upload = () => {
           setStatus(null);
           return;
         }
-
-        setStatus('Reading text from converted PDF image...');
 
         const text = await ocrImageFile(imageFile.file);
         if (!text) {
