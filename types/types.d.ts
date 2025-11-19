@@ -81,3 +81,9 @@ export interface Job {
 }
 
 export type Action = 'password-reset' | 'verify-email' | 'change-email' | "must-verify-email";
+
+export interface OCR{
+  success: boolean;
+  text?: string;
+  error?: string;
+}

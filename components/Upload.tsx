@@ -1,11 +1,11 @@
 'use client'
 
-import { LABELS} from '@/constants';
+import { LABELS } from '@/constants';
 import { Job, JobType } from '@/lib/entityUtils';
 import { convertPdfToImage } from '@/lib/pdf2image';
 import { useRouter } from 'next/navigation';
-import React, { type FormEvent, useCallback, useState } from 'react'
-import { useDropzone } from 'react-dropzone'
+import React, { type FormEvent, useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import { ClipLoader } from 'react-spinners';
 
 function formatSize(bytes: number): string {
@@ -17,36 +17,44 @@ function formatSize(bytes: number): string {
 }
 
 export async function runAllJobs(
-  opts: {maxRuns?: number, onTick?: (jobtype?: JobType) => void} = {}
+  opts: { maxRuns?: number; onTick?: (jobtype?: JobType) => void } = {},
 ): Promise<void> {
   const maxRuns = opts.maxRuns ?? 8;
-  for(let i = 0; i < maxRuns; i++){
-    const res = await fetch("/api/jobs/run", {method: "POST"});
-    if(!res.ok) {
-      throw new Error("Error running job");
+  for (let i = 0; i < maxRuns; i++) {
+    const res = await fetch('/api/jobs/run', { method: 'POST' });
+    if (!res.ok) {
+      throw new Error('Error running job');
     }
     const data = (await res.json()) as Job;
 
-    if(opts.onTick) opts.onTick(data.nextJobType);
-    if(!data.processed) break;
+    if (opts.onTick) opts.onTick(data.nextJobType);
+    if (!data.processed) break;
   }
+}
+
+async function ocrImageFile(file: File): Promise<string> {
+  const { createWorker } = await import('tesseract.js');
+  const worker = await createWorker('eng');
+  const { data } = await worker.recognize(file);
+  await worker.terminate();
+  return (data?.text ?? '').trim();
 }
 
 const Upload = () => {
   const [file, setFile] = useState<File | null>(null);
-  const [status, setStatus] = useState<string | null>(null);  
+  const [status, setStatus] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const maxFileSize = 20 * 1024 * 1024;
   const router = useRouter();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
-    const handleFileSelect = (file : File | null) => { 
-      setFile(file); 
+    const handleFileSelect = (file: File | null) => {
+      setFile(file);
       setError(null);
-    } 
-    const file = acceptedFiles[0] || null; 
-    handleFileSelect(file);
+    };
+    const f = acceptedFiles[0] || null;
+    handleFileSelect(f);
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -56,72 +64,151 @@ const Upload = () => {
     maxSize: maxFileSize,
   });
 
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
     setStatus(null);
     setIsLoading(true);
 
-    const formData = new FormData(e.currentTarget);
-    if(file == null){
-      setError(null);
-      setStatus(null);
-      setIsLoading(false);
-      return;
-    }
-    formData.append("file", file);
-
     try {
-      setStatus("Uploading file...");
-      
-      let res = await fetch("/api/upload", { method: "POST", body: formData });
+      const formData = new FormData(e.currentTarget);
+      const title = (formData.get('title') as string | null) ?? '';
 
-      if (!res.ok && file.type === "application/pdf") {
-        const imageFile = await convertPdfToImage(file);
-        if(!imageFile.file) {
-            setError("Error: Failed to convert PDF to image");
-            console.log(imageFile?.error);
-            return;
-        }
-        formData.delete("file");
-        formData.append("file", imageFile.file);
-        res = await fetch("/api/upload", { method: "POST", body: formData });
-
-      }
-      
-      if(!res.ok){
-        const resJson = await res.json();
-        setError(resJson.error || "Upload failed.");
-        setStatus(null);
+      if (file == null) {
+        setError('Please select a file.');
+        setIsLoading(false);
         return;
       }
-      setStatus("File Uploaded. Reading document...");
-      
+
+      if (file.type.startsWith('image/')) {
+        setStatus('File Uploaded. Reading document...');
+
+        const text = await ocrImageFile(file);
+        if (!text) {
+          setError('Could not extract text from the file.');
+          setStatus(null);
+          setIsLoading(false);
+          return;
+        }
+
+        const res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title,
+            text,
+            sourceType: 'image',
+            ingestMethod: 'ocr',
+            pageCount: 1,
+          }),
+        });
+
+        if (!res.ok) {
+          const resJson = await res.json().catch(() => ({}));
+          setError(resJson.error || 'Upload failed.');
+          setStatus(null);
+          setIsLoading(false);
+          return;
+        }
+
+        setStatus('File Uploaded. Reading document...');
+        const json = await res.json();
+        const id = json.id;
+
+        await fetch(`/api/documents/${id}/process`, { method: 'POST' });
+
+        await runAllJobs({
+          maxRuns: 50,
+          onTick: (jobType) => {
+            if (!jobType) return;
+            const message = LABELS[jobType];
+            setStatus(message);
+          },
+        });
+
+        setStatus('Done');
+        router.push(`/document/${id}`);
+        return;
+      }
+
+      const uploadForm = new FormData();
+      uploadForm.append('title', title);
+      uploadForm.append('file', file);
+
+      setStatus('Uploading file...');
+
+      let res = await fetch('/api/upload', {
+        method: 'POST',
+        body: uploadForm,
+      });
+
+      if (!res.ok && file.type === 'application/pdf') {
+        const imageFile = await convertPdfToImage(file);
+        if (!imageFile.file) {
+          setError('Error: Failed to convert PDF to image');
+          console.log(imageFile?.error);
+          setIsLoading(false);
+          setStatus(null);
+          return;
+        }
+
+        setStatus('Reading text from converted PDF image...');
+
+        const text = await ocrImageFile(imageFile.file);
+        if (!text) {
+          setError('Could not extract text from the converted PDF image.');
+          setStatus(null);
+          setIsLoading(false);
+          return;
+        }
+
+
+        res = await fetch('/api/upload', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            title,
+            text,
+            sourceType: 'image',
+            ingestMethod: 'ocr',
+            pageCount: 1,
+          }),
+        });
+      }
+
+      if (!res.ok) {
+        const resJson = await res.json().catch(() => ({}));
+        setError(resJson.error || 'Upload failed.');
+        setStatus(null);
+        setIsLoading(false);
+        return;
+      }
+
+      setStatus('File Uploaded. Reading document...');
+
       const json = await res.json();
       const id = json.id;
-      await fetch(`/api/documents/${id}/process`, {method: "POST"});
+
+      await fetch(`/api/documents/${id}/process`, { method: 'POST' });
 
       await runAllJobs({
         maxRuns: 50,
         onTick: (jobType) => {
-          if(!jobType){
+          if (!jobType) {
             return;
           }
           const message = LABELS[jobType];
           setStatus(message);
-        }
-      })
+        },
+      });
 
-      setStatus("Done");
-
-
+      setStatus('Done');
       router.push(`/document/${id}`);
-
     } catch (err) {
-      setError("Unexpected error occurred:" + err as string);
+      console.error(err);
+      setError('Unexpected error occurred: ' + (err as Error).message);
       setStatus(null);
-    }finally{
+    } finally {
       setIsLoading(false);
     }
   };
