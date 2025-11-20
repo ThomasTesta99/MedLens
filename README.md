@@ -1,36 +1,97 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# MedLens 🩺📄  
+_AI-assisted medical report explainer for patients_
 
-## Getting Started
+MedLens is a full-stack web app that helps patients understand their own medical documents.  
+You can securely upload reports (PDFs or images), and MedLens will:
 
-First, run the development server:
+- Run OCR on scanned documents  
+- Extract key medical entities (diagnoses, medications, lab values, etc.)  
+- Generate a plain-language summary at ~6th-grade reading level  
+- Show **clickable citations** that map each summary sentence back to the original report text  
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🌐 Live Demo
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+👉 **Try MedLens here:**  
+https://med-lens-six.vercel.app/sign-in
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+You can create an account and upload your own test documents.
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## ✨ Features
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Secure authentication**
+  - Email + password login with reset flow
+  - Social login (Google) via BetterAuth
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- **Document ingestion**
+  - Upload PDFs and images
+  - OCR pipeline for scanned documents
+  - Text normalization & sentence splitting
 
-## Deploy on Vercel
+- **Medical NLP**
+  - Entity extraction (diagnoses, medications, procedures, etc.)
+  - Entity context flags like _present / negated / uncertain_
+  - Summarization optimized for patient understanding (no heavy jargon)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+- **Traceable explanations**
+  - Summary sentences are linked back to the original report sentences
+  - Citation panel explains _“this summary sentence comes from these parts of the report”_
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Job queue + admin tools**
+  - Multi-stage background jobs (OCR → sentences → entities → summary)
+  - Error tracking for failed jobs
+  - Admin view to inspect / clean up problematic jobs
+
+---
+
+## 🧱 Tech Stack
+
+- **Frontend & Backend**: Next.js (App Router), React, TypeScript  
+- **Styling**: Tailwind CSS + custom components  
+- **Auth**: [BetterAuth](https://better-auth.com/) with email/password + Google OAuth  
+- **Database**: PostgreSQL (local or hosted, e.g. Neon) via [Drizzle ORM](https://orm.drizzle.team/)  
+- **AI / NLP**:
+  - OCR worker (Tesseract-style) for PDFs and images  
+  - Token classification / NER for medical entities  
+  - LLM summarization tuned for patient-friendly output  
+- **Other**:
+  - API routes & server actions for document processing  
+  - Strict TypeScript types for documents, entities, jobs, and summaries  
+
+---
+
+## 🖼️ Core Concepts
+
+MedLens revolves around a few key data models:
+
+- **Document** – The uploaded file (PDF or image) + basic metadata  
+- **Sentences** – The document text split into numbered sentences  
+- **Entities** – Extracted medical entities with labels and character spans  
+- **Summary** – A structured summary with:
+  - `summary`: final text  
+  - `questions`: suggested questions for the patient to ask their doctor  
+  - `citations`: mapping from summary sentences → source sentence indexes  
+- **Jobs** – Background tasks that move a document through the pipeline  
+
+This design makes the app **traceable**, **debuggable**, and easy to extend with new AI steps.
+
+---
+
+## 🗂️ Project Structure (High Level)
+
+```txt
+.
+├─ app/                 # Next.js App Router pages & routes
+│  ├─ (auth)/           # Sign-in / sign-up / reset password screens
+│  ├─ (root)/           # Main app views (dashboard, documents, admin, etc.)
+│  └─ api/              # Route handlers (upload, jobs, etc.)
+├─ components/          # Reusable UI components (layout, forms, document views)
+├─ constants/           # Shared constants / enums (routes, statuses, etc.)
+├─ database/            # Drizzle schema & database config
+├─ lib/                 # Utility functions, AI pipeline, OCR, job helpers
+├─ migrations/          # SQL migrations generated by Drizzle
+├─ public/              # Static assets (logo, icons, favicons, etc.)
+└─ types/               # Shared TypeScript types (Document, Entity, Summary, Job...)
